@@ -1,7 +1,7 @@
 <?php
 $dsn = 'mysql:dbname=webshop;host=localhost';
-$user = 'root';
-$password = 'root';
+$user = 'webshop';
+$password = 'webshop';
 
 try {
     $dbh = new PDO($dsn, $user, $password);
