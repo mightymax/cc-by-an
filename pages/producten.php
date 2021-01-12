@@ -27,7 +27,6 @@ SQL;
 </div>
 <?php endif?>
 
-<pre><?php echo $sql?></pre>
 <div class="row row-cols-1 row-cols-md-3 mb-3 ">
     <?php foreach ($dbh->query($sql) as $row) :?>
     <div class="col">
