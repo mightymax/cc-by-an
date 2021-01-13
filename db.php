@@ -106,12 +106,12 @@ class WebshopDB extends PDO
         $stmt = $this->prepare("SELECT id, name, password FROM client WHERE email=:email"); 
         $stmt->bindParam(':email', $_POST['email']);
         $stmt->execute(); 
-        $user = $stmt->fetch();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
         if (!$user) {
             $this->setMessage("We hebben uw emailadres niet gevonden. Controleer dit, of maak een nieuw account aan.", 'warning');
             return false;
         }
-        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        // $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
         if (!password_verify($_POST['password'], $user['password'])) {
             $this->setMessage("De combinatie van het door u opgegeven emailadres en wachtwoord komt niet voor in ons systeem. Controleer dit, of maak een nieuw account aan.", 'warning');
             return false;
@@ -127,7 +127,6 @@ class WebshopDB extends PDO
     {
         $_SESSION = [];
         $this->setMessage("U bent met succes afgemeld, tot ziens!", 'success');
-
     }
 
 }

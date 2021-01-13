@@ -7,12 +7,12 @@ $app = require 'db.php';
 
 $lead = '';
 
-if (isset($_POST['login'])) {
+$user = $app->getUser();
+
+if (!$user && isset($_POST['login'])) {
     $page = (true == $app->login()) ? 'home' : 'inloggen';
     $app->redirect($page);
 }
-
-$user = $app->getUser();
 
 $page = @$_REQUEST['page'];
 switch ($page) {
