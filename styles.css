@@ -100,6 +100,10 @@ input[type="button"].button-primary:focus {
   border-color: #1EAEDB; 
 }
 
+.button i, button i {
+  font-size: 130%;
+}
+
 /* Grid
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .container {
@@ -194,6 +198,10 @@ ul.list-inline li a {
   color: #222;
 }
 
+main>h2 {
+  margin-top: 20px;
+}
+
 p.num-par  {
   font-weight: bold;
     float: left; 
@@ -205,12 +213,16 @@ p.lead {
   letter-spacing: .1rem;
 }
 
-.form-signin {
-  width: 100%;
-  max-width: 330px;
-  padding: 15px;
-  margin: auto;
+label i.fa-asterisk {
+  color: red;
+  font-size: 80%;
 }
+
+.profiel .columns input {
+  width: 100%;
+  padding-right: 25px;
+}
+
 
 footer {
   border-top: 5px solid #eee;
@@ -221,6 +233,41 @@ footer {
 div#user {
   float: right;
   line-height: 6.5rem;
+}
+
+.message {
+  padding:15px;
+  border: solid 1px;
+  border-radius: 4px;
+}
+
+.message i {
+  font-size: 150%;
+  padding-right: 10px;
+}
+
+.message.error {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
+
+.message.warning {
+  color: #8a6d3b;
+  background-color: #fcf8e3;
+  border-color: #faebcc;
+}
+
+.message.success {
+  color: #3c763d;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+}
+
+.message.info {
+  color: #31708f;
+  background-color: #d9edf7;
+  border-color: #bce8f1;
 }
 
 .products {

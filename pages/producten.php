@@ -1,10 +1,10 @@
-<?php if($category = $dbh->getCategory()): ?>
+<?php if($category = $app->getCategory()): ?>
 <div class="container text-center">
     <h3><small class="text-muted"><?php echo $category['name'];?></small></h3>
 </div>
 <?php endif?>
 
-<?php foreach ($dbh->getProducts() as $i => $row) : ?>
+<?php foreach ($app->getProducts() as $i => $row) : ?>
     <?php if ($i % 3 == 0):?>
         <div class="row products">
     <?php endif?>

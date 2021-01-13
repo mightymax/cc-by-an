@@ -25,14 +25,16 @@
           <div id="user">
           <?php if ($user): ?>
             <a class="button" href="?page=profiel"><i class="far fa-id-card"></i> Profiel</a>
+            <a class="button" href="?page=logout"><i class="fas fa-sign-out-alt"></i> Afmelden</a>
           <?php else: ?>
-            <a class="button" href="?page=inloggen"><i class="fas fa-sign-in-alt"></i> Inloggen</a>
+            <a class="button" href="?page=inloggen"><i class="fas fa-sign-in-alt"></i> Aanmelden</a>
           <?php endif?>
         </div>
         </nav>
       </header>
       <main>
         <h2><?php echo $title?></h2>
+        <?php include 'messages.php'?>
         <?php if ($lead) :?><p class="lead"><?php echo $lead?></p><?php endif?>
         <?php include "./pages/{$page}.php" ?>
       </main>

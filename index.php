@@ -1,12 +1,18 @@
 <?php
+session_start();
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', 1);
 
-$db = require 'db.php';
+$app = require 'db.php';
 
 $lead = '';
-$user = '';
 
+if (isset($_POST['login'])) {
+    $page = (true == $app->login()) ? 'home' : 'inloggen';
+    $app->redirect($page);
+}
+
+$user = $app->getUser();
 
 $page = @$_REQUEST['page'];
 switch ($page) {
@@ -16,9 +22,13 @@ switch ($page) {
     case 'contact':
     case 'inloggen':
     case 'producten':
-    case 'blah':
+    case 'profiel':
         $title = ucfirst($page);
         break;
+    case 'logout':
+        $app->logout();
+        header('Location: ?page=home', true, 301);
+        exit;
     default:
         $title = 'Haakwerk';
         $lead = 'Welkom bij onze webshop! U kunt hier terecht voor het unieke haakwerk van &laquo;<em>de Moeder van Mees</em>&raquo;';
