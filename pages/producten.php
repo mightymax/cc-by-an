@@ -1,50 +1,22 @@
-<?php
-$category = '';
-if (!isset($sql)) {
-    $categoryQuery = '';
-    if (@$_REQUEST['category']) {
-        $stmt = $dbh->prepare("SELECT id, name FROM property WHERE id=:id AND category='categorie' LIMIT 1"); 
-        $stmt->bindParam(':id', $_REQUEST['category'], PDO::PARAM_INT);
-        $stmt->execute(); 
-        $category = $stmt->fetch();
-        if ($category) {
-            $categoryQuery = 'AND property.id=' . intval($category['id']);
-        }
-    }
-    $sql = <<<SQL
-SELECT product.*, property.name AS category 
-FROM product 
-JOIN product_has_property ON product.id=product_has_property.product
-JOIN property ON property.id=product_has_property.property AND property.category='categorie'
-WHERE 1 {$categoryQuery}
-ORDER BY product.name
-SQL;
-}
-?>
-<?php if($category): ?>
+<?php if($category = $dbh->getCategory()): ?>
 <div class="container text-center">
-    <h2><small class="text-muted"><?php echo $category['name'];?></small></h2>
+    <h3><small class="text-muted"><?php echo $category['name'];?></small></h3>
 </div>
 <?php endif?>
 
-<div class="row row-cols-1 row-cols-md-3 mb-3 ">
-    <?php foreach ($dbh->query($sql) as $row) :?>
-    <div class="col">
-        <div class="card mb-4 shadow-sm">
-            <div class="card-header">
-                <h4 class="my-0 fw-normal">
-                    <?php echo $row['name']?>
-                </h4>
-            </div>
-            <div class="card-body">
-                <h1 class="card-title pricing-card-title">€ <?php echo intval($row['price']/100)?><small class="text-muted">,<?php echo str_pad(fmod($row['price'], 100), 2, '0')?></small></h1>
-                <p><?php echo @$row['description']?></p>
-                <ul class="list-unstyled mt-3 mb-4">
-                </ul>
-                <button type="button" class="w-100 btn btn-lg btn-outline-primary">
-                    <i class="bi bi-basket"></i> In winkelwagen</button>
-            </div>
-        </div>
-    </div>
-    <?php endforeach?>
-</div>
+<?php foreach ($dbh->getProducts() as $i => $row) : ?>
+    <?php if ($i % 3 == 0):?>
+        <div class="row products">
+    <?php endif?>
+            <article class="four columns product">
+                <h4><?php echo $row['name']?></h4>
+                <p class="price">
+                    <span class="integers">€ <?php echo intval($row['price']/100)?></span>
+                    <span class="decimals">,<?php echo str_pad(fmod($row['price'], 100), 2, '0')?></span>
+                </p>
+                <p class="description"><?php echo $row['description']?></p>
+                <button type="button"><i class="fas fa-cart-plus"></i> In winkelwagen</button>
+            </article>
+    <?php if ($i % 3 == 2):?></div><?php endif?>
+<?php endforeach?>
+<?php if ($i % 3 < (3-1)):?></div><?php endif?>

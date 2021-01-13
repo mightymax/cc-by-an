@@ -1,13 +1,13 @@
-<main class="form-signin">
-  <form action="?inloggen">
-      <div class="mb-3">
-        <label for="email" class="form-label">Emailadres</label>
-        <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
-      </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password">
-      </div>
-      <button type="submit" class="btn btn-primary"><i class="bi bi-key"></i> Inloggen</button>
-  </form>
-</main>
+<form action="?inloggen" method="POST">
+    <p>
+      <label for="email">Emailadres</label>
+      <input type="email" class="form-control" id="email" required>
+    </p>
+    <p>
+      <label for="password">Password</label>
+      <input type="password" class="form-control" id="password">
+    </p>
+    <p>
+      <button type="submit" class="button-primary"><i class="fas fa-sign-in-alt"></i>  Inloggen</button>
+    </p>
+</form>

@@ -21,7 +21,7 @@ switch ($page) {
         break;
     default:
         $title = 'Haakwerk';
-        $lead = 'Welkom bij onze webshop!<br>U kunt hier terecht voor het unieke haakwerk van &laquo;<em>de Moeder van Mees</em>&raquo;';
+        $lead = 'Welkom bij onze webshop! U kunt hier terecht voor het unieke haakwerk van &laquo;<em>de Moeder van Mees</em>&raquo;';
         $page = 'home';
         break;
 }
