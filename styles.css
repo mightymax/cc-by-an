@@ -235,6 +235,14 @@ div#user {
   line-height: 6.5rem;
 }
 
+div#categories {
+  float: right;
+}
+
+article.product img {
+  width: 95%;
+}
+
 .message {
   padding:15px;
   border: solid 1px;

@@ -33,7 +33,17 @@
         </nav>
       </header>
       <main>
+        <?php if ($page == 'producten'): ?>
+          <div id="categories">
+          <?php foreach($app->getCategories() as $category): 
+              $primaryClass = (@$_REQUEST['category'] == $category['id']) ? "button-primary" : "";
+          ?>
+              <a class="button <?php echo $primaryClass?> " href="?page=producten&amp;category=<?php echo $category['id']?>"><?php echo $category['name']?></a>
+          <?php endforeach?>
+          </div>
+        <?php endif?>
         <h2><?php echo $title?></h2>
+
         <?php include 'messages.php'?>
         <?php if ($lead) :?><p class="lead"><?php echo $lead?></p><?php endif?>
         <?php include "./pages/{$page}.php" ?>

@@ -12,32 +12,59 @@ try {
 
 class WebshopDB extends PDO
 {
-    function getCategory()
+    function getCategory($id)
     {
-        if (!isset($_REQUEST['category'])) {
-            return;
-        }
-        $stmt = $this->prepare("SELECT id, name FROM property WHERE id=:id AND category='categorie' LIMIT 1"); 
-        $stmt->bindParam(':id', $_REQUEST['category'], PDO::PARAM_INT);
+        $stmt = $this->prepare("SELECT id, name FROM category WHERE id=:id"); 
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute(); 
         $category = $stmt->fetch(PDO::FETCH_ASSOC);
         return $category;
     }
 
-    function getProducts($category = null, $offset = 0, $limit = 1000000)
+    function getCategories() 
     {
-        $category = $this->getCategory();
+        $stmt = $this->prepare("SELECT id, name FROM category ORDER BY name"); 
+        $stmt->execute(); 
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    function getTeasers()
+    {
+
+        //step 1: fetch 3 categories from DB:
+        $stmt = $this->prepare('SELECT * FROM category ORDER BY category.name LIMIT 3');
+        $stmt->execute();
+        $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        //step 2: fetch a random product for each category:
+        foreach ($categories as &$category) {
+            $stmt2 = $this->prepare("SELECT * FROM product WHERE category=:id ORDER BY RAND() LIMIT 1"); 
+            $stmt2->bindParam(':id', $category['id'], PDO::PARAM_INT);
+            $stmt2->execute();
+            $category['id'] = (int)$category['id'];
+            $category['product'] = $stmt2->fetch(PDO::FETCH_ASSOC);
+        }
+        return $categories;
+
+    }
+
+    function getProducts($category_id = null, $offset = 0, $limit = 1000000)
+    {
+        if ($category_id) {
+            $category = $this->getCategory($category_id);
+        } else {
+            $category = false;
+        }
         if ($category) {
-            $categoryQuery = 'AND property.id=' . intval($category['id']);
+            $categoryQuery = 'AND category=' . intval($category['id']);
         } else {
             $categoryQuery = '';
         }
 
         $sql = <<<SQL
-            SELECT product.*, property.name AS category 
+            SELECT product.*, category.name AS category 
             FROM product 
-            JOIN product_has_property ON product.id=product_has_property.product
-            JOIN property ON property.id=product_has_property.property AND property.category='categorie'
+            JOIN category ON product.category=category.id
             WHERE 1 {$categoryQuery}
             ORDER BY product.name
             LIMIT {$offset}, {$limit}
