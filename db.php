@@ -24,7 +24,6 @@ class WebshopDB extends PDO
             'samesite' => 'lax'
         ]);
         session_start();
-        session_regenerate_id(true);
     }
 
     function getCategory($id)
