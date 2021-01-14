@@ -6,7 +6,8 @@
             <article class="four columns product">
                 <h4><?php echo $row['name']?></h4>
                 <p class="price">
-                    <span class="integers">€ <?php echo intval($row['price']/100)?></span>
+                    <span class="currency">€</span>
+                    <span class="integers"><?php echo intval($row['price']/100)?></span>
                     <span class="decimals">,<?php echo str_pad(fmod($row['price'], 100), 2, '0')?></span>
                 </p>
                 <img src="./images/<?php echo $row['id']?>.jpg" alt="<?php echo $row['name']?>" />

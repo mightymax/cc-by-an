@@ -252,7 +252,10 @@ label i.fa-asterisk {
     line-height: 25px;
   }
 
-}
+  .products article {
+    margin-bottom: 40px;
+  }
+  }
 
  a.button {
   margin-top: 10px;
@@ -275,6 +278,34 @@ label i.fa-asterisk {
 }
 a.button:hover {
   border-color: #1EAEDB; 
+}
+
+.price .currency {
+  display: inline-block;
+  margin-top: 10px;
+  vertical-align: top;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #888;
+}
+
+.price .integers {
+  font-size: 2.6rem;
+}
+
+.price .decimals {
+  font-size: 1.2rem;
+  color: #888;
+  position: relative;
+  left: -2px;
+}
+
+.products h4 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 0px;
+  font-size: 2.6rem;;
 }
 
 
