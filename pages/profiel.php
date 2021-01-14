@@ -2,7 +2,7 @@
 $app->gatekeeper($user);
 
 if (isset($_POST['profiel'])) {
-    $app->saveUser($_POST);
+    $app->saveUser($user, $_POST);
 }
 ?>
 <form class="profiel" action="?page=profiel" method="POST">
@@ -20,14 +20,28 @@ if (isset($_POST['profiel'])) {
               <input type="email" name="email" class="form-control" id="email" required value="<?php echo $user['email']?>">
             </p>
         </div>
-        <div class="four columns">
+    </div>
+    <p></p>
+    <div class="row">
+        <div class="two columns">
+            <p>
+                <label for="postalcode">Postcode</label>
+                <input type="text" name="postalcode" class="form-control" id="postalcode" value="<?php echo $user['postalcode']?>">
+            </p>
+        </div>
+        <div class="two columns">
+            <p>
+                <label for="housenumber">Huisnummer</label>
+                <input type="text" name="housenumber" class="form-control" id="housenumber" value="<?php echo $user['housenumber']?>">
+            </p>
+        </div>
+        <div class="three columns">
             <p>
               <label for="phone">Telefoon </label>
               <input type="text" name="phone" class="form-control" id="phone" value="<?php echo $user['phone']?>">
             </p>
         </div>
     </div>
-    <p></p>
     <div class="row">
         <div class="three columns">
             <p>
@@ -37,7 +51,7 @@ if (isset($_POST['profiel'])) {
         </div>
         <div class="three columns">
             <p>
-                <label for="password2">Wachtwoord (controle)</label>
+                <label for="password2"> (controle)</label>
                 <input type="password" name="password2" class="form-control" id="password2">
             </p>
         </div>

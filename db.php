@@ -20,8 +20,8 @@ class WebshopDB extends PDO
             'path' => '/',
             'domain' => $_SERVER['HTTP_HOST'],
             'secure' => $_SERVER['REQUEST_SCHEME'] == 'https',
-            'httponly' => true,
-            'samesite' => 'strict'
+            'httponly' => false,
+            'samesite' => 'lax'
         ]);
         session_start();
         session_regenerate_id(true);
@@ -140,8 +140,74 @@ class WebshopDB extends PDO
         return $user;
     }
 
-    function saveUser(Array $data) {
-        $this->setMessage("@TODO save user", 'info');
+    function saveUser($user, Array $data) {
+        $updateData = [];
+        if (!isset($_POST['email']) || !$_POST['email']  || filter_var($_POST['email'], FILTER_VALIDATE_EMAIL) == false) {
+            $this->setMessage('Een geldig emailadres is verplicht', 'warning');
+            $this->redirect('profiel');
+        }
+
+        //emails must be unique, check if new emailadress already exists for other users:
+        $stmt = $this->prepare("SELECT id FROM client WHERE email=:email AND NOT(id=:id)"); 
+        $stmt->bindParam(':id', $user['id'], PDO::PARAM_INT);
+        $stmt->bindParam(':email', $_POST['email']);
+        $stmt->execute(); 
+        if ($stmt->fetchColumn()) {
+            $this->setMessage('Er bestaat al een andere gebruiker met dit emailadres.', 'warning');
+            $this->redirect('profiel');
+        }
+
+        if ($_POST['email'] != $user['email']) {
+            $updateData['email'] = $_POST['email'];
+        }
+
+        if (!isset($_POST['name']) || !trim($_POST['name'])) {
+            $this->setMessage('Een geldig naam is verplicht', 'warning');
+            $this->redirect('profiel');
+        }
+
+        if ($_POST['name'] != $user['name']) {
+            $updateData['name'] = $_POST['name'];
+        }
+
+        if (isset($_POST['phone']) && $_POST['phone'] != $user['phone']) {
+            $updateData['phone'] = $_POST['phone'];
+        }
+
+        if (isset($_POST['postalcode']) && $_POST['postalcode'] != $user['postalcode']) {
+            $updateData['postalcode'] = $_POST['postalcode'];
+        }
+
+        if (isset($_POST['housenumber']) && $_POST['housenumber'] != $user['housenumber']) {
+            $updateData['housenumber'] = $_POST['housenumber'];
+        }
+
+        if (isset($_POST['password']) && $_POST['password'] != '') {
+            if (!isset($_POST['password2']) || $_POST['password'] != $_POST['password2']) {
+                $this->setMessage('Wachtwoord en controle wachtwoord komen niet overeen', 'warning');
+                $this->redirect('profiel');
+            }
+            $updateData['password'] = password_hash($_POST['password']);
+        }
+
+        if (!count($updateData)) {
+            $this->setMessage("Uw gegevens zijn niet gewijzigd.", 'info');
+            $this->redirect('profiel');
+        }
+
+        $fields = array_keys($updateData);
+        array_walk($fields, function($val, $i) use (&$fields) {
+            $fields[$i] = "{$val}=:{$val}";
+        });
+        $updateData['id'] = $user['id'];
+        $sql = 'UPDATE client SET ' .implode(', ', $fields).' WHERE id=:id';
+        try {
+            $this->prepare($sql)->execute($updateData);
+        } catch (PDOException $e) {
+            $this->setMessage("Uw gegevens zijn niet opgeslagen door een technisch probleem met onze website.", 'error');
+            $this->redirect('profiel');
+        }
+        $this->setMessage("Uw gewijzigde gegevens zijn opgeslagen.", 'success');
         $this->redirect('profiel');
     }
 
