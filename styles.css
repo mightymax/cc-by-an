@@ -42,7 +42,7 @@ a {
   text-decoration: none;
 }
 a:hover, a.active {
-  color: #0FA0CE; 
+  color: #0FA0CE !important; 
 }
 
 a.active {
@@ -313,6 +313,15 @@ footer {
   border-top: 5px solid #eee;
   margin-top: 20px;
   padding: 10px 0 0 0;
+}
+
+footer nav:first-child {
+  float: left;
+}
+
+footer nav:last-child {
+  float: right;
+  font-size: 2rem;
 }
 
 div#user {
