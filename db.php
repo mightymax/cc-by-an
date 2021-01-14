@@ -12,6 +12,21 @@ try {
 
 class WebshopDB extends PDO
 {
+    function startSession() 
+    {
+        session_name("cc-by-an-session-id");
+        session_set_cookie_params([
+            'lifetime' => 0,
+            'path' => '/',
+            'domain' => $_SERVER['HTTP_HOST'],
+            'secure' => $_SERVER['REQUEST_SCHEME'] == 'https',
+            'httponly' => true,
+            'samesite' => 'strict'
+        ]);
+        session_start();
+        session_regenerate_id(true);
+    }
+
     function getCategory($id)
     {
         $stmt = $this->prepare("SELECT id, name FROM category WHERE id=:id"); 

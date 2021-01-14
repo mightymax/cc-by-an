@@ -1,11 +1,9 @@
 <?php
-session_name("cc-by-an-session-id");
-session_start();
-session_regenerate_id(true);
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', 1);
 
 $app = require 'db.php';
+$app->startSession();
 
 $lead = '';
 

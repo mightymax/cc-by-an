@@ -15,6 +15,8 @@
     <link href="styles.css" rel="stylesheet">
   </head>
   <body>
+    <!-- see bug https://bugzilla.mozilla.org/show_bug.cgi?id=1404468 -->
+    <script>0</script>
     <div class="container">
       <header>
         <h1>Cute Cloths by An</h1>
