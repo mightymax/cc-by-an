@@ -39,9 +39,14 @@ p {
 
 a {
   color: #1EAEDB; 
+  text-decoration: none;
 }
-a:hover {
+a:hover, a.active {
   color: #0FA0CE; 
+}
+
+a.active {
+  font-weight: bold;
 }
 
 .button, 

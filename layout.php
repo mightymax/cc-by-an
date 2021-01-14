@@ -20,9 +20,9 @@
         <h1>Cute Cloths by An</h1>
         <nav>
           <ul>
-            <li><a href="?">Home</a></li>
-            <li><a href="?page=producten">Producten</a></li>
-            <li><a href="?page=contact">Contact</a></li>
+            <li><a href="?" <?php if ($page=='home') echo 'class="active"'?>>Home</a></li>
+            <li><a href="?page=producten" <?php if ($page=='producten') echo 'class="active"'?>>Producten</a></li>
+            <li><a href="?page=contact" <?php if ($page=='contact') echo 'class="active"'?>>Contact</a></li>
           </ul>
           <div id="user">
           <?php if ($user): ?>
