@@ -5,7 +5,7 @@
     <?php endif?>
             <article class="four columns product">
                 <a href="?page=product&amp;category=<?php echo @$_REQUEST['category']?>&amp;product=<?php echo $row['id']?>">
-                    <img src="./images/<?php echo $row['id']?>.jpg" alt="<?php echo $row['name']?>" />
+                    <img src="./images/products/small/<?php echo $row['id']?>.jpg" alt="<?php echo $row['name']?>" />
                     <div class="body">
                         <h4><?php echo $row['name']?></h4>
                         <p class="price">
