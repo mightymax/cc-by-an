@@ -26,10 +26,10 @@
           </ul>
           <div id="user">
           <?php if ($user): ?>
-            <a class="button" href="?page=profiel"><i class="far fa-id-card"></i> Profiel</a>
-            <a class="button" href="?page=logout"><i class="fas fa-sign-out-alt"></i> Afmelden</a>
+            <a class="button" href="?page=profiel"><i class="far fa-id-card"></i><span>Profiel</span></a>
+            <a class="button" href="?page=logout"><i class="fas fa-sign-out-alt"></i> <span>Afmelden</span></a>
           <?php else: ?>
-            <a class="button" href="?page=inloggen"><i class="fas fa-sign-in-alt"></i> Aanmelden</a>
+            <a class="button" href="?page=inloggen"><i class="fas fa-sign-in-alt"></i> <span>Aanmelden</span></a>
           <?php endif?>
         </div>
         </nav>

@@ -228,6 +228,20 @@ label i.fa-asterisk {
   padding-right: 25px;
 }
 
+@media only screen and (max-width: 600px) {
+  header a.button {
+    padding: 0 10px;
+  }
+  header a.button span {
+    display: none;
+  }
+  h1 {
+    font-size: 2.5rem;
+    background-size: 30px ! important;
+    padding-left: 40px !important;
+  }
+}
+
 
 footer {
   border-top: 5px solid #eee;
