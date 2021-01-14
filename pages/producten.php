@@ -4,19 +4,16 @@
         <div class="row products">
     <?php endif?>
             <article class="four columns product">
-                <h4><?php echo $row['name']?></h4>
-                <p class="price">
-                    <span class="currency">€</span>
-                    <span class="integers"><?php echo intval($row['price']/100)?></span>
-                    <span class="decimals">,<?php echo str_pad(fmod($row['price'], 100), 2, '0')?></span>
-                </p>
-                <a href="?page=product&amp;product=<?php echo $row['id']?>">
-                    <img src="./images/<?php echo $row['id']?>.jpg" alt="<?php echo $row['name']?>" />
-                </a>
-
-                <!-- img src="./images/<?php echo $row['id']?>.jpg" alt="<?php echo $row['name']?>" /-->
-                <!-- <p class="description"><?php echo $row['description']?></p> -->
-                <button type="button"><i class="fas fa-cart-plus"></i> In winkelwagen</button>
+                <img src="./images/<?php echo $row['id']?>.jpg" alt="<?php echo $row['name']?>" />
+                <div class="body">
+                    <h4><?php echo $row['name']?></h4>
+                    <p class="price">
+                        <span class="currency">€</span>
+                        <span class="integers"><?php echo intval($row['price']/100)?></span>
+                        <span class="decimals">,<?php echo str_pad(fmod($row['price'], 100), 2, '0')?></span>
+                    </p>
+                    <button type="button"><i class="fas fa-cart-plus"></i> In winkelwagen</button>
+                </div>
             </article>
     <?php if ($i % 3 == 2):?></div><?php endif?>
 <?php endforeach?>

@@ -53,12 +53,20 @@
         <?php include "./pages/{$page}.php" ?>
       </main>
       <footer>
-          <nav>
+        <nav>
             <ul class="list-inline">
               <li><a href="?page=team">Team</a></li>
               <li><a href="?page=privacy">Privacy</a></li>
               <li><a href="?page=voorwaarden">Voorwaarden</a></li>
               <li><a href="?page=contact">Contact</a></li>
+            </ul>
+        </nav>
+        <nav>
+            <ul class="list-inline">
+              <li><a href="https://www.instagram.com" title="Instagram"><i class="fab fa-instagram-square"></i></a></li>
+              <li><a href="https://www.facebook.com" title="Facebook"><i class="fab fa-facebook-square"></i></a></li>
+              <li><a href="https://www.pinterest.com" title="Pinterest"><i class="fab fa-pinterest-square"></i></a></li>
+              <li><a href="https://www.twitter.com" title="Twitter"><i class="fab fa-twitter-square"></i></a></li>
             </ul>
         </nav>
       </footer>
