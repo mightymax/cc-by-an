@@ -87,6 +87,12 @@ class WebshopDB extends PDO
         return $this->query($sql);
     }
 
+    #function getProduct()
+    #{
+    #    $sql = <<<SQL
+    #        SELECT 
+    #}
+
     function setMessage($msg, $category = 'info')
     {
         $_SESSION["message-{$category}"] = $msg;

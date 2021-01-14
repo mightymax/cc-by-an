@@ -22,6 +22,7 @@ switch ($page) {
     case 'contact':
     case 'inloggen':
     case 'producten':
+    case 'product':
     case 'profiel':
         $title = ucfirst($page);
         break;
