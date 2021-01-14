@@ -9,7 +9,7 @@
                     <span class="integers">€ <?php echo intval($row['price']/100)?></span>
                     <span class="decimals">,<?php echo str_pad(fmod($row['price'], 100), 2, '0')?></span>
                 </p>
-                <img src="./images/<?php echo $row['id']?>.jpg" alt="<?php echo $row['product']['name']?>" />
+                <img src="./images/<?php echo $row['id']?>.jpg" alt="<?php echo $row['name']?>" />
                 <!-- <p class="description"><?php echo $row['description']?></p> -->
                 <button type="button"><i class="fas fa-cart-plus"></i> In winkelwagen</button>
             </article>

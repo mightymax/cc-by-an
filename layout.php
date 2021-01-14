@@ -2,20 +2,22 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo=">
+    <link rel="shortcut icon" href="./favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Haakwerk van de moeder van Mees">
+    <meta name="description" content="Cute Cloths by An">
     <meta name="author" content="Mees Lindeman">
-    <title>Haakwerk Webshop • <?php echo $title?></title>
+    <title>Cute Cloths by An • <?php echo $title?></title>
     <!-- Used for icons, see https://fontawesome.com/icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
-    <link href='//fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">  
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600&display=swap" rel="stylesheet"> 
     <link href="styles.css" rel="stylesheet">
   </head>
   <body>
     <div class="container">
       <header>
-        <h1>Haakwerk van de Moeder van Mees</h1>
+        <h1>Cute Cloths by An</h1>
         <nav>
           <ul>
             <li><a href="?">Home</a></li>

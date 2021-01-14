@@ -282,6 +282,20 @@ article.product img {
   margin-bottom: 40px;
 }
 
+h1, h2, h3, h4 {
+  font-family: 'Kalam', cursive;
+}
+
+header h1 {
+  padding-top: 10px;
+  background-image: url('./images/cc-by-an-logo.png');
+  background-size: 60px;
+  background-repeat: no-repeat;
+  background-position: 0;
+  padding-left: 70px;
+  
+}
+
 .container:after,
 .row:after,
 ol.list-inline:after,
