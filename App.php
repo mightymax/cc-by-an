@@ -48,6 +48,7 @@ class WebshopApp
      */
     function startSession() 
     {
+        
         session_name("cc-by-an-session-id");
         session_set_cookie_params([
             'lifetime' => 0,
@@ -58,6 +59,28 @@ class WebshopApp
             'samesite' => 'lax'
         ]);
         session_start();
+
+        /**
+         * prevent CSRF attacks
+         * @see https://medium.com/@steveclifton_12558/php-csrf-prevention-ad0baa2d2902
+         */
+        if (isset($_POST['csrftoken']) && $_POST['csrftoken'] !== @$_SESSION['csrftoken']) {
+            $this->setMessage("CSRF attack detected.", 'error');
+            $this->redirect();
+
+        }
+        // generate a new token
+        $_SESSION['csrftoken'] = md5(base64_encode(random_bytes(32)));
+    }
+
+    function getCrfsToken()
+    {
+        return '<input type="hidden" name="csrftoken" value="'. $_SESSION['csrftoken'] .'">';
+    }
+
+    function formIsPosted() 
+    {
+        return isset($_SESSION['csrftoken']) && isset($_POST['csrftoken']);
     }
 
     /**

@@ -17,6 +17,7 @@ if (isset($_POST['login'])) {
 <form action="?page=inloggen" method="POST">
   <div class="row">
       <div class="three columns">
+          <?php echo $app->getCrfsToken() ?>
           <input type="hidden" name="login" value="1">
           <label for="email">Emailadres</label>
           <input type="email" name="email" id="email" required>

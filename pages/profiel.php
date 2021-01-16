@@ -10,6 +10,7 @@ if (isset($_POST['profiel'])) {
 <form class="profiel" action="?page=profiel" method="POST">
     <div class="row">
         <div class="four columns">
+            <?php echo $app->getCrfsToken() ?>
             <input type="hidden" name="profiel" value="1">
             <label for="naam">Naam <i class="fas fa-asterisk"></i></label>
             <input type="text" name="name" id="name" required value="<?php echo $user['name']?>">
