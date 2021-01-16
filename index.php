@@ -11,9 +11,20 @@ ini_set('error_reporting', E_ALL);
 ini_set('display_errors', 1);
 
 /**
- * Include our main App class and assign it to a variable $app
+ * Credentials to connect to MySQL server
+ * Created with:
+    CREATE USER 'webshop'@'localhost' IDENTIFIED BY 'webshop';
+    GRANT ALL PRIVILEGES ON webshop.* TO 'webshop'@'localhost';
+*/
+$dsn = 'mysql:dbname=webshop;host=localhost';
+$user = 'webshop';
+$password = 'webshop';
+
+/**
+ * Include our main App class and construct our App
  */
-$app = require 'db.php';
+require 'db.php';
+$app = new WebshopApp($dsn, $user, $password);
 
 /**
  * Start our session as early as possible:

@@ -1,36 +1,46 @@
 <?php
-/**
- * Credentials to connect to MySQL server
- * Created with:
-    CREATE USER 'webshop'@'localhost' IDENTIFIED BY 'webshop';
-    GRANT ALL PRIVILEGES ON webshop.* TO 'webshop'@'localhost';
-*/
-$dsn = 'mysql:dbname=webshop;host=localhost';
-$user = 'webshop';
-$password = 'webshop';
-
-try {
-    /**
-     * We use PHP PDO to connect to database
-     * @see https://www.w3schools.com/php/php_mysql_connect.asp
-     * @see https://www.php.net/manual/en/book.pdo.php
-     */
-    $dbh = new WebshopDB($dsn, $user, $password);
-} catch (PDOException $e) {
-    // if the DB connection fails, we can not do anything else, so we quit ...
-    echo 'Connection failed: ' . $e->getMessage();
-    exit;
-}
 
 /**
  * This is our main Class for the Webshop App
- * It extends the PHP PDO class by adding some usefull methods
+ * It holds the PHP PDO class for connecting to our MySQL DB
  * By adding functionality to this class, we keep our page/modules relatively clean
  * which makes it easier to maintain code
  * @see https://www.w3schools.com/php/php_oop_inheritance.asp
 */
-class WebshopDB extends PDO
+class WebshopApp
 {
+    /**
+     * @var $conn 
+     */
+    protected PDO $conn;
+
+    function __construct($dsn, $user, $password)
+    {
+        try {
+            /**
+             * We use PHP PDO to connect to database
+             * @see https://www.w3schools.com/php/php_mysql_connect.asp
+             * @see https://www.php.net/manual/en/book.pdo.php
+             */
+            $this->conn = new PDO($dsn, $user, $password);
+        } catch (PDOException $e) {
+            // if the DB connection fails, we can not do anything else, so we quit ...
+            echo 'Connection failed: ' . $e->getMessage();
+            exit;
+        }
+    }
+
+    /**
+     * Since the reference to our db connection is a private class var
+     * we should use this getter to use it outside of this class
+     * 
+     * @return PDO
+     */
+    function getDbConnection()
+    {
+        return $this->conn;
+    }
+
     /**
      * We use Sessions to enable users login to our app.
      * The session muse be started very early in the bootstrap process of our app (in index.php)     * 
@@ -59,7 +69,7 @@ class WebshopDB extends PDO
      */
     function getCategory($id)
     {
-        $stmt = $this->prepare("SELECT id, name FROM category WHERE id=:id"); 
+        $stmt = $this->conn->prepare("SELECT id, name FROM category WHERE id=:id"); 
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute(); 
         $category = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -78,7 +88,7 @@ class WebshopDB extends PDO
      */
     function getCategories($limit = 100000, $offset = 0) 
     {
-        $stmt = $this->prepare("SELECT * FROM category ORDER BY name LIMIT :offset, :limit"); 
+        $stmt = $this->conn->prepare("SELECT * FROM category ORDER BY name LIMIT :offset, :limit"); 
         $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
         $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute(); 
@@ -95,7 +105,7 @@ class WebshopDB extends PDO
         $categories = $this->getCategories(3);
 
         //step 2: fetch a random product for each category:
-        $stmt = $this->prepare("SELECT * FROM product WHERE category=:id ORDER BY RAND() LIMIT 1"); 
+        $stmt = $this->conn->prepare("SELECT * FROM product WHERE category=:id ORDER BY RAND() LIMIT 1"); 
         foreach ($categories as &$category) {
             $stmt->bindParam(':id', $category['id'], PDO::PARAM_INT);
             $stmt->execute();
@@ -139,7 +149,7 @@ class WebshopDB extends PDO
             ORDER BY product.name
             LIMIT :offset, :limit
         SQL;
-        $stmt = $this->prepare($sql);
+        $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
         $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute(); 
@@ -242,7 +252,7 @@ class WebshopDB extends PDO
      */
     function getUser($id) 
     {
-        $stmt = $this->prepare("SELECT * FROM client WHERE id=:id"); 
+        $stmt = $this->conn->prepare("SELECT * FROM client WHERE id=:id"); 
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute(); 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -281,7 +291,7 @@ class WebshopDB extends PDO
          * We want our emails to be unique, check if new emailadress already exists for other users.
          * "Fetch all users that have this e-mailaddress, but are not the user that wants to edit his data"
          */
-        $stmt = $this->prepare("SELECT id FROM client WHERE email=:email AND NOT(id=:id)"); 
+        $stmt = $this->conn->prepare("SELECT id FROM client WHERE email=:email AND NOT(id=:id)"); 
         $stmt->bindParam(':id', $user['id'], PDO::PARAM_INT);
         $stmt->bindParam(':email', $data['email']);
         $stmt->execute(); 
@@ -371,7 +381,7 @@ class WebshopDB extends PDO
          * so we redirect with a flash message
          */
         try {
-            $this->prepare($sql)->execute($updateData);
+            $this->conn->prepare($sql)->execute($updateData);
         } catch (PDOException $e) {
             $this->setMessage("Uw gegevens zijn niet opgeslagen door een technisch probleem met onze website.", 'error');
             $this->redirect('profiel');
@@ -390,7 +400,7 @@ class WebshopDB extends PDO
      */
     function login($email, $password) {
 
-        $stmt = $this->prepare("SELECT id, name, password FROM client WHERE email=:email"); 
+        $stmt = $this->conn->prepare("SELECT id, name, password FROM client WHERE email=:email"); 
         $stmt->bindParam(':email', $email);
         $stmt->execute(); 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -426,7 +436,3 @@ class WebshopDB extends PDO
 
 }
 
-// We do not want this sensitive data in the rest of our app
-// see https://www.w3schools.com/php/php_variables_scope.asp
-unset($user, $password, $dsn);
-return $dbh;

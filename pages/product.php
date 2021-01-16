@@ -12,8 +12,11 @@
                 <a href="https://www.w3schools.com/php/php_mysql_select.asp">W3Schools tutorial</a> so you use a statement and not the raw SQL query.</li>
             <li>to execute a query in your function you need access to the 
                 <a href="https://www.w3schools.com/php/php_mysql_intro.asp">PHP PDO MySQL object</a> that handles the database requests. 
-                This object is stored in the variable <code>$app</code>. So whenever in the W3Schools example they use the example variable <code>$conn</code>
-                you sould use <code>$app</code>.</li>
+                This object is encapsulated in the App class stored in <code>$app</code>. It can be retrieved by calling <code>$app->getDbConnection()</code>. 
+                So whenever in the W3Schools example they use the example variable <code>$conn</code>
+                you sould use <code>$app->getDbConnection()</code>.
+                <br>e.g. <code>$result = $conn->query($sql);</code> becomes <code>$result = $app->getDbConnection()->query($sql);</code>
+                </li>
             <li>Keep in mind that <code>$app</code> is not in scope of your function, 
                 so you should either pass this to your function, or you should make it a global variable.
                 <a href="https://www.w3schools.com/php/php_variables_scope.asp">Make sure you understand scoping</a>, it is very important!
