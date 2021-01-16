@@ -23,7 +23,7 @@ $password = 'webshop';
 /**
  * Include our main App class and construct our App
  */
-require 'db.php';
+require 'App.php';
 $app = new WebshopApp($dsn, $user, $password);
 
 /**
@@ -43,7 +43,6 @@ switch ($page) {
     case 'producten':
     case 'product':
     case 'profiel':
-        $lead = '';
         $title = ucfirst($page);
         break;
     case 'logout':
@@ -54,10 +53,9 @@ switch ($page) {
     // simply show the home page
     default:
         $title = 'Haakwerk';
-        $lead = 'Welkom bij onze webshop! U kunt hier terecht voor het unieke haakwerk van An.';
         $page = 'home';
         break;
 }
 
 // Include our layout page a.k.a. our View
-include 'layout.php';
+include 'layouts/main.php';

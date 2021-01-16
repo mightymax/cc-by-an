@@ -48,9 +48,12 @@
         <?php endif?>
         <h2><?php echo $title?></h2>
 
-        <?php include 'messages.php'?>
-        <?php if ($lead) :?><p class="lead"><?php echo $lead?></p><?php endif?>
-        <?php include "./pages/{$page}.php" ?>
+        <?php 
+          // include the messages and the main page. Pay attention to the path, __DIR__ contains the current
+          // Php path of this script
+          include __DIR__ . '/messages.php';
+          include __DIR__ . "/../pages/{$page}.php";
+        ?>
       </main>
       <footer>
         <nav>
