@@ -1,8 +1,10 @@
 <?php
-$app->gatekeeper($user);
+//only logged in users have access to this page:
+$app->gatekeeper(); 
 
+$user = $app->getAppUser();
 if (isset($_POST['profiel'])) {
-    $app->saveUser($user, $_POST);
+    $app->saveProfile($_POST);
 }
 ?>
 <form class="profiel" action="?page=profiel" method="POST">
