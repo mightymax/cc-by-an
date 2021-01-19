@@ -1,4 +1,6 @@
 <?php
+require_once './vendor/autoload.php';
+
 /**
  * This is our main Class for the Webshop App
  * It holds the PHP PDO class for connecting to our MySQL DB
@@ -533,6 +535,7 @@ class WebshopApp
         $bestelnummer = session_id();
         $sum = 0;
         $bestelling = "";
+
         foreach ($_SESSION['shoppingcart'] as $id => $num_items) {
             $product = $this->getProduct($id);
             if ($product) {
@@ -540,12 +543,12 @@ class WebshopApp
                 $bestelling .= "{$num_items} x {$product['name']} à € " . number_format($product['price']/100, 2, ',', '.') . "\n";
             }
         }
-        $sum = number_format($sum/100, 2, ',', '.');
+        $sum_fmt = number_format($sum/100, 2, ',', '.');
         $message = "Beste {$user['name']},
 
 Bedankt voor uw bestelling. 
 Het ordernummer van uw bestelling is «{$bestelnummer}». 
-Zodra wij uw betaling van € {$sum} hebben ontvangen sturen wij uw producten op naar:
+Zodra wij uw betaling van € {$sum_fmt} hebben ontvangen sturen wij uw producten op naar:
 Hoogeweg 40-B
 1851 PJ Heiloo
 
@@ -556,7 +559,13 @@ Nogmaals bedankt voor uw bestelling en graag tot ziens in onze webshop!
 
 Het team van Cute Cloths By An.
         ";
-        $mailresult = mail($user['email'], 'Uw bestelling van Cute Cloths By An', $message, $headers);
+
+        $mailresult = mail($user['email'], 'Uw bestelling van Cute Cloths By An', $message);
+
+        if (false) {
+            $this->mollie();
+        }
+
         $this->setMessage("Bedankt voor uw bestelling. Wij sturen uw een e-mail met verdere instructies.", 'success');
         if (!$mailresult) {
             $this->setMessage("Bedankt voor uw bestelling. Het is helaas niet gelukt om een e-mail te sturen, wij nemen z.s.m. contact met u op.<p><code>*** DEBUG START E-MAIL ***</code></p><p><blockquote><pre>{$message}</pre></blockquote></p><p><code>*** END E-MAIL ***</code></p>", 'warning');
@@ -565,6 +574,84 @@ Het team van Cute Cloths By An.
         }
         unset($_SESSION['shoppingcart']);
         $this->redirect();
+    }
+
+    function mollie()
+    {
+        $protocol = isset($_SERVER['HTTPS']) && strcasecmp('off', $_SERVER['HTTPS']) !== 0 ? "https" : "http";
+        $hostname = $_SERVER['HTTP_HOST'];
+        $path = dirname(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']);
+
+        $protocol = 'https';
+        $hostname = 'cc-by-an.lindeman.nu';
+        $path = '';
+        
+        $orderlines = [];
+        $bestelnummer = session_id();
+        
+        $user = $this->getAppUser();
+        $mollie = new \Mollie\Api\MollieApiClient();
+        $mollie->setApiKey("test_EjPWTwGKTc7TnJkpSB73HeUc4WBFEC");
+
+        foreach ($_SESSION['shoppingcart'] as $id => $num_items) {
+            $product = $this->getProduct($id);
+            if ($product) {
+                $sum += $num_items * $product['price'];
+                $orderlines[] = [
+                    'sku' => 'ccan' . sprintf('%05d', $id),
+                    'name'  => $product['name'],
+                    'productUrl' => "{$protocol}://{$hostname}{$path}/index.php?page=product&product={$id}",
+                    "imageUrl" =>  "{$protocol}://{$hostname}{$path}/images/products/small/{$id}.jpg",
+                    'quantity' => $num_items,
+                    'vatRate' => 0,
+                    'unitPrice' => [
+                        'currency' => 'EUR',
+                        'value' => sprintf('%0.2f', $product['price']/100)
+                    ],
+                    'totalAmount' => [
+                        'currency' => 'EUR',
+                        'value' => sprintf('%0.2f', $num_items * $product['price']/100)
+                    ],
+                    "vatAmount" => [
+                        "currency" => "EUR",
+                        "value" => "0.00",
+                    ],
+                ];
+            }
+        }
+        $address = [
+            "streetAndNumber" => "Hoogeweg 40-B",
+            "postalCode" => "1851 PJ",
+            "city" => "Heiloo",
+            "country" => "nl",
+            "givenName" => "Mees",
+            "familyName" => "Lindeman",
+            "email" => $user['email']
+        ];
+        try {
+            $order = $mollie->orders->create([
+                "amount" => [
+                    "currency" => "EUR",
+                    "value" => sprintf('%0.2f', $sum/100)
+                ],
+                'billingAddress' => $address,
+                'shippingAddress' => $address,
+                "metadata" => [
+                    "order_id" => $bestelnummer,
+                    "description" => "Cute Cloths By An Bestelling"
+                ],
+                "locale" => "nl_NL",
+                "method" => "ideal",
+                'lines' => $orderlines,
+                "orderNumber" => strval($bestelnummer),
+                "redirectUrl" => "{$protocol}://{$hostname}{$path}/index.php?page=home&confirm=1&order_id={$bestelnummer}",
+                "webhookUrl"  => "{$protocol}://{$hostname}{$path}/webhook.php",
+            ]);
+        } catch (\Mollie\Api\Exceptions\ApiException $e) {
+            echo "API call failed: " . htmlspecialchars($e->getMessage());
+            exit;
+        }
+        header("Location: " . $order->getCheckoutUrl(), true, 303);
     }
 
     function countShoppingCart()
