@@ -1,8 +1,32 @@
 <style>
-img {
-  width: 270px;
+.product {
+  width: 400px;
+  height: 400px;
+  overflow: hidden;
+  margin: 0 auto;
   border: 1px solid black;
 } 
+
+.product img {
+    width: 100%;
+    transition: 0.5s all ease-in-out;
+}
+
+.product:hover img {
+    transform: scale(1.5);
+}
+
+p {
+    font-size: 20px;
+}
+
+.price_product .currency {
+    font-size: 20px;
+}
+
+.price_product .integers {
+    font-size: 30px;
+}
 </style>
 
 <?php
@@ -21,16 +45,22 @@ if ($product == false) {
     return;
 }
 ?>
+
 <div class="row">
-    <div class="five columns"><img src="./images/products/large/<?php echo $product['id']?>.jpg" alt="<?php echo $product['name']?>" style="width:400px;height:400px;"></div>
+    <div class="five columns">
+        <div class="product">
+        <img src="./images/products/large/<?php echo $product['id']?>.jpg" alt="<?php echo $product['name']?>" style="width:100%;">
+        </div>
+    </div>
     <div class="seven columns">
-    <p><?php echo $product['description']?></p><br><br><br><br>
-    <p class="price">
+        <div class="p">
+        <p><?php echo $product['description']?></p><br>
+        </div>
+    <p class="price_product">
         <span class="currency">€</span>
         <span class="integers"><?php echo intval($product['price']/100)?></span>
-        <span class="decimals">,<?php echo str_pad(fmod($product['price'], 100), 2, '0')?></span>
+        <span class="currency">,<?php echo str_pad(fmod($product['price'], 100), 2, '0')?></span>
     </p>
+    <button type="button"><i class="fas fa-cart-plus"></i> In winkelwagen</button>
     </div>
-  </div>
-
-
+</div>
