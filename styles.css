@@ -507,3 +507,53 @@ label > .label-body {
   display: inline-block;
   margin-left: .5rem;
   font-weight: normal; }
+
+
+/* Winkelwagen page: */
+th,
+td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #E1E1E1; }
+th:first-child,
+td:first-child {
+  padding-left: 0; }
+th:last-child,
+td:last-child {
+  padding-right: 0; }
+
+th.num, td.num {
+    text-align: right;
+}
+
+td > a > img, th:first-child {
+    width: 50px;
+}
+
+td a.button {
+    padding: 0 5px;
+    margin: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+.num_items {
+    cursor: default;
+}
+
+td .fas {
+    font-size: 1rem;
+    padding: 0 2px;
+}
+
+a.num_items:hover {
+    color: #555 ! important;
+    border-color: #bbb;
+
+}
+
+blockquote {
+    display: block;
+    border-left: solid 5px #ccc;
+    padding-left: 10px;
+}

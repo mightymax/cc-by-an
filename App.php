@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This is our main Class for the Webshop App
  * It holds the PHP PDO class for connecting to our MySQL DB
@@ -248,9 +247,9 @@ class WebshopApp
      * 
      * @see https://code.tutsplus.com/tutorials/how-to-redirect-with-php--cms-34680
      */
-    function redirect($page = 'home') 
+    function redirect($page = 'home', $extra = '') 
     {
-        header('Location: ?page=' . $page, true, 301);
+        header('Location: ?page=' . $page . $extra, true, 301);
         exit;
     }
 
@@ -467,6 +466,116 @@ class WebshopApp
         session_unset();
         $this->setMessage("U bent met succes afgemeld, tot ziens!", 'success');
         $this->redirect();
+    }
+
+    function inShoppingCart($product_id, $page = 'producten')
+    {
+        $user = $this->getAppUser();
+        if (!$user) {
+            $this->setMessage("U moet eerst <a href='?page=inloggen'>Aanmelden</a> voordat u bij ons kunt bestellen", 'info');
+            $this->redirect($page, '#');
+        }
+        $product = $this->getProduct($product_id);
+        if (!$product) {
+            $this->setMessage("Product niet gevonden", 'error');
+            $this->redirect($page, '#');
+        }
+        if (!isset($_SESSION['shoppingcart'])) {
+            $_SESSION['shoppingcart'] = [];
+        }
+        if (!isset($_SESSION['shoppingcart'][$product['id']])) {
+            $_SESSION['shoppingcart'][$product['id']] = 0;
+        }
+        $_SESSION['shoppingcart'][$product['id']] ++;
+        $this->setMessage("Het product `<strong>{$product['name']}</strong>` is met succes toegevoegd aan uw winkelwagen.", 'info');
+        $this->redirect($page, '#');
+    }
+
+    function getShoppingCart() {
+        return $_SESSION['shoppingcart'];
+    }
+
+    function shoppingCartDelete($product_id) {
+        if (isset($_SESSION['shoppingcart'][$product_id])) {
+            unset($_SESSION['shoppingcart'][$product_id]);
+        }
+        $this->redirect('winkelwagen');
+    }
+
+    function shoppingCartPlus($product_id) {
+        if (isset($_SESSION['shoppingcart'][$product_id])) {
+            $_SESSION['shoppingcart'][$product_id] ++;
+        }
+        $this->redirect('winkelwagen');
+    }
+
+    function shoppingCartMin($product_id, $delta_items = 1) {
+        if (isset($_SESSION['shoppingcart'][$product_id])) {
+            $_SESSION['shoppingcart'][$product_id] = $_SESSION['shoppingcart'][$product_id] - 1;
+        }
+        if ($_SESSION['shoppingcart'][$product_id] == 0) {
+            unset($_SESSION['shoppingcart'][$product_id]);
+        }
+        $this->redirect('winkelwagen');
+    }
+
+    function checkoutShoppingCart()
+    {
+        $user = $this->getAppUser();
+        if (!$user) {
+            $this->setMessage("U moet eerst <a href='?page=inloggen'>Aanmelden</a> voordat u bij ons kunt bestellen", 'info');
+            $this->redirect();
+        }
+        if (!$this->countShoppingCart()) {
+            $this->setMessage("Uw winkelwagen is leeg", 'warning');
+            $this->redirect();
+        }
+        $bestelnummer = session_id();
+        $sum = 0;
+        $bestelling = "";
+        foreach ($_SESSION['shoppingcart'] as $id => $num_items) {
+            $product = $this->getProduct($id);
+            if ($product) {
+                $sum += $num_items * $product['price'];
+                $bestelling .= "{$num_items} x {$product['name']} à € " . number_format($product['price']/100, 2, ',', '.') . "\n";
+            }
+        }
+        $sum = number_format($sum/100, 2, ',', '.');
+        $message = "Beste {$user['name']},
+
+Bedankt voor uw bestelling. 
+Het ordernummer van uw bestelling is «{$bestelnummer}». 
+Zodra wij uw betaling van € {$sum} hebben ontvangen sturen wij uw producten op naar:
+Hoogeweg 40-B
+1851 PJ Heiloo
+
+Uw bestelling:
+{$bestelling}
+
+Nogmaals bedankt voor uw bestelling en graag tot ziens in onze webshop!
+
+Het team van Cute Cloths By An.
+        ";
+        $mailresult = mail($user['email'], 'Uw bestelling van Cute Cloths By An', $message, $headers);
+        $this->setMessage("Bedankt voor uw bestelling. Wij sturen uw een e-mail met verdere instructies.", 'success');
+        if (!$mailresult) {
+            $this->setMessage("Bedankt voor uw bestelling. Het is helaas niet gelukt om een e-mail te sturen, wij nemen z.s.m. contact met u op.<p><code>*** DEBUG START E-MAIL ***</code></p><p><blockquote><pre>{$message}</pre></blockquote></p><p><code>*** END E-MAIL ***</code></p>", 'warning');
+        } else {
+            $this->setMessage("Bedankt voor uw bestelling. Wij sturen uw een e-mail met verdere instructies.<p><code>*** DEBUG START E-MAIL ***</code></p><p><blockquote><pre>{$message}</pre></blockquote></p><p><code>*** END E-MAIL ***</code></p>", 'success');
+        }
+        unset($_SESSION['shoppingcart']);
+        $this->redirect();
+    }
+
+    function countShoppingCart()
+    {
+        if (!isset($_SESSION['shoppingcart']) || count($_SESSION['shoppingcart']) == 0) {
+            return 0;
+        }
+        return array_reduce($_SESSION['shoppingcart'], function ($count, $item) {
+            $count += $item;
+            return $count;
+        }, 0);
     }
 
 }

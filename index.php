@@ -43,6 +43,7 @@ switch ($page) {
     case 'producten':
     case 'product':
     case 'profiel':
+    case 'winkelwagen':
         $title = ucfirst($page);
         break;
     case 'logout':
