@@ -45,9 +45,14 @@
               <a class="button <?php echo $primaryClass?> " href="?page=producten&amp;category=<?php echo $category['id']?>"><?php echo $category['name']?></a>
           <?php endforeach?>
           </div>
-        <?php endif?>
+          <h2><?php echo $title?></h2>
+        <?php elseif ($page == 'product'): ?>
+          <?php $id = intval($_REQUEST['product']);
+                $product = $app->getProduct($id);?>
+          <h2><?php echo $product['name']?></h2>
+        <?php else: ?>
         <h2><?php echo $title?></h2>
-
+        <?php endif ?>
         <?php 
           // include the messages and the main page. Pay attention to the path, __DIR__ contains the current
           // Php path of this script

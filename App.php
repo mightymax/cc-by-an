@@ -12,7 +12,7 @@ class WebshopApp
     /**
      * @var $conn 
      */
-    protected PDO $conn;
+    protected $conn;
 
     function __construct($dsn, $user, $password)
     {
@@ -177,6 +177,18 @@ class WebshopApp
         $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute(); 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Gets product to show single product page 
+     */
+    function getProduct($id)
+   {    
+        $stmt=$this->conn->prepare("SELECT * FROM product WHERE product.id = :id");
+        $stmt->bindParam(':id',$id,PDO::PARAM_INT);
+        $stmt->execute();
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $product;
     }
 
     /**
