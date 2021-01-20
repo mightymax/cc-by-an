@@ -1,5 +1,5 @@
 <?php
-require_once './vendor/autoload.php';
+// require_once './vendor/autoload.php';
 
 /**
  * This is our main Class for the Webshop App
