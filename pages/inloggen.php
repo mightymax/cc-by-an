@@ -30,4 +30,16 @@ if (isset($_POST['login'])) {
         <label>&nbsp;</label>
         <button type="submit" class="button-primary"><i class="fas fa-sign-in-alt"></i>  Inloggen</button>
       </div>
+  </div>
+  <div class="row" style="margin-top:20px;">
+    <div class="six columns">
+    <h4>Nog geen account?</h4>
+    <p>
+      <a href="?page=profiel" class="button">
+          <i class="fas fa-user-circle"></i>
+          Maak een nieuw account aan
+      </a>
+    </p>
+    </div>
+  </div>
 </form>
