@@ -47,7 +47,7 @@ if (isset($_REQUEST['product'])) {
     <div class="row">
         <div class="three columns">  
             <label></label>
-            <button class="button-primary" type="submit"><i class="far fa-save"></i> Opslaan</button> 
+            <button class="button-primary" type="submit"><i class="far fa-save"></i><span> Opslaan</span></button> 
         </div>
     </div>
 </form>
