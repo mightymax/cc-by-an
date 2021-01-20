@@ -232,7 +232,7 @@ label i.fa-asterisk {
   font-size: 80%;
 }
 
-.profiel .columns input {
+form .columns input, form .columns textarea {
   width: 100%;
   padding-right: 25px;
 }
@@ -589,3 +589,7 @@ blockquote {
 .page-product .price_product .integers {
     font-size: 30px;
 }
+
+div.row {
+  margin-bottom: 20px;
+} 

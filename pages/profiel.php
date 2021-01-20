@@ -16,7 +16,7 @@ if (isset($_POST['profiel'])) {
     }
 }
 ?>
-<form class="profiel" action="?page=profiel" method="POST">
+<form class="form" action="?page=profiel" method="POST">
     <div class="row">
         <div class="four columns">
             <?php echo $app->getCrfsToken() ?>
@@ -29,7 +29,6 @@ if (isset($_POST['profiel'])) {
             <input type="email" name="email" id="email" required value="<?php echo $user['email']?>">
         </div>
     </div>
-    <p></p>
     <div class="row">
         <div class="two columns">
             <label for="postalcode">Postcode</label>
@@ -54,7 +53,6 @@ if (isset($_POST['profiel'])) {
             <input type="password" name="password2" id="password2" <?php if ($user['isNew']) echo 'required'; ?>>
         </div>
     </div>
-
     <div class="row">
         <div class="three columns">
             <label>&nbsp;</label>

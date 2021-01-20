@@ -26,7 +26,7 @@
             <li><a href="?page=producten" <?php if ($page=='producten') echo 'class="active"'?>>Producten</a></li>
             <li><a href="?page=contact" <?php if ($page=='contact') echo 'class="active"'?>>Contact</a></li>
             <?php if ($app->getAppUser()):?>
-            <li><a href="?page=admin">Product toevoegen</a></li>
+            <li><a href="?page=admin" <?php if ($page=='admin') echo 'class="active"'?>>Product toevoegen</a></li>
             <?php endif ?>
           </ul>
           <div id="user">

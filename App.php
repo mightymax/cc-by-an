@@ -329,7 +329,7 @@ class WebshopApp
             $user = $this->getAppUser();
             if (!$user) {
                 session_unset();
-                $this->setMessage("Deze gebruiker komt noet voor in ons systeem.", 'error');
+                $this->setMessage("Deze gebruiker komt niet voor in ons systeem.", 'error');
                 $this->redirect();
             }
         }

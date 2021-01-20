@@ -1,26 +1,46 @@
 <!--    INSERT INTO product (name, price, description, category)
-        VALUES ('','','','') -->
+        VALUES (:name, :price,'','') -->
 
-<form>
-  <div class="row">
-    <div class="six columns">
-        <label for="productName">Product naam</label>
-        <input class="u-full-width" type="text" id="productName"><br><br>
-        <label for="productDescription">Beschrijving</label>
-        <textarea class="u-full-width" id="productDescription"></textarea><br><br>
-        <label for="productPrice">Prijs (in centen)</label>
-        <input class="u-full-width" type="text" id="productPrice"><br><br>
-        <input class="button-primary" type="submit" value="Submit">
+<?php 
+function saveProduct():
+
+?>
+
+<form method="POST" action="?page=admin">
+    <div class="row">
+        <div class="four columns">
+            <label for="name">Product naam</label>
+            <input type="text" name="name" id="name">
+        </div>
+        <div class="four columns">
+            <label for="category">Categorie</label>
+            <select name="category" id="category">
+            <option value="Option 1">Mode & accessoires</option>
+            <option value="Option 2">Baby & kind</option>
+            <option value="Option 3">Divers</option>
+            </select>
+        </div>
     </div>
-    <div class="six columns">
-      <label for="productCategory">Categorie</label>
-      <select class="u-full-width" id="productCategory">
-        <option value="Option 1">Mode & accessoires</option>
-        <option value="Option 2">Baby & kind</option>
-        <option value="Option 3">Divers</option>
-      </select><br><br>
-      <label for="productPhoto">Upload foto</label>
-      <input type="file" id="myFile" name="filename">
+    <div class="row">
+        <div class="four columns">
+            <label for="description">Beschrijving</label>
+            <textarea name="description" id="description"></textarea>
+        </div>
+        <div class="four columns">
+            <label for="productPhoto">Upload foto</label>
+            <input type="file" id="myFile" name="filename">
+        </div>
     </div>
-  </div>
+    <div class="row">
+        <div class="four columns">
+            <label for="price">Prijs (in centen)</label>
+            <input type="number" name="price" id="price">
+        </div>
+    </div>
+    <div class="row">
+        <div class="two columns">  
+            <label></label>
+            <input class="button-primary" type="submit" value="Submit">
+        </div>
+    </div>
 </form>
