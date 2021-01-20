@@ -25,6 +25,9 @@
             <li><a href="?" <?php if ($page=='home') echo 'class="active"'?>>Home</a></li>
             <li><a href="?page=producten" <?php if ($page=='producten') echo 'class="active"'?>>Producten</a></li>
             <li><a href="?page=contact" <?php if ($page=='contact') echo 'class="active"'?>>Contact</a></li>
+            <?php if ($app->getAppUser()):?>
+            <li><a href="?page=admin">Product toevoegen</a></li>
+            <?php endif ?>
           </ul>
           <div id="user">
           <?php if ($app->getAppUser()): ?>
@@ -74,10 +77,7 @@
         </nav>
         <nav>
             <ul class="list-inline">
-              <li><a href="https://www.instagram.com" title="Instagram"><i class="fab fa-instagram-square"></i></a></li>
-              <li><a href="https://www.facebook.com" title="Facebook"><i class="fab fa-facebook-square"></i></a></li>
-              <li><a href="https://www.pinterest.com" title="Pinterest"><i class="fab fa-pinterest-square"></i></a></li>
-              <li><a href="https://www.twitter.com" title="Twitter"><i class="fab fa-twitter-square"></i></a></li>
+              <li><a href="https://www.instagram.com/cute_cloths_by_an/" title="Instagram"><i class="fab fa-instagram-square"></i></a></li>
             </ul>
         </nav>
       </footer>

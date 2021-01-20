@@ -35,11 +35,9 @@ if ($product == false) {
         <span class="integers"><?php echo intval($product['price']/100)?></span>
         <span class="currency">,<?php echo str_pad(fmod($product['price'], 100), 2, '0')?></span>
     </p>
-    
-    <?php if ($app->getAppUser()): ?>
-    <a href="?page=producten&amp;category=<?php echo @$_REQUEST['category']?>&inShoppingCart=<?php echo $row['id']?>#product-<?php echo $row['id']?>"><button type="button"><i class="fas fa-cart-plus"></i> In winkelwagen</button></a>
-    <?php else: ?>
-    <a href="?page=inloggen"><button type="button"><i class="fas fa-sign-in-alt"></i> Log in om te bestellen</button></a>
-    <?php endif ?>
+    <button type="button"><i class="fas fa-cart-plus"></i> In winkelwagen</button></a>
+        <?php if ($app->getAppUser()):?>
+        <a href="?page=admin">Product bewerken</a>
+        <?php endif ?>
     </div>
 </div>
