@@ -217,6 +217,11 @@ class WebshopApp
         $_SESSION["message-{$category}"] = $msg;
     }
 
+    function clearMessage($category = 'info')
+    {
+        unset($_SESSION["message-{$category}"]);
+    }
+
     /**
      * Fetch Flash message from Session and delete it
      */
@@ -296,6 +301,20 @@ class WebshopApp
         return $user;
     }
 
+    function getEmptyUser()
+    {
+        return [
+            'id' => 0,
+            'name' => '',
+            'email' => '',
+            'postalcode' => '',
+            'housenumber' => '',
+            'phone' => '',
+            'isNew' => true
+        ];
+    
+    }
+
     /**
      * Updates a user in our DB bases on the data that is provided via the profile page
      * Containes strict checks on data input, because we never trust user input
@@ -303,12 +322,16 @@ class WebshopApp
      * @see https://www.w3schools.com/php/php_mysql_update.asp
      * @see https://dev.to/_garybell/never-trust-user-input-4ff1
      */
-    function saveProfile(Array $data) {
-        $user = $this->getAppUser();
-        if (!$user) {
-            session_unset();
-            $this->setMessage("Deze gebruiker komt noet voor in ons systeem.", 'error');
-            $this->redirect();
+    function saveProfile(Array $data, $createUserMode = false) {
+        if ($createUserMode) {
+            $user = $this->getEmptyUser();
+        } else {
+            $user = $this->getAppUser();
+            if (!$user) {
+                session_unset();
+                $this->setMessage("Deze gebruiker komt noet voor in ons systeem.", 'error');
+                $this->redirect();
+            }
         }
 
         // container for the daata that the user wants us to update:
@@ -390,7 +413,15 @@ class WebshopApp
                 $this->setMessage('Wachtwoord en controle wachtwoord komen niet overeen', 'warning');
                 $this->redirect('profiel');
             }
-            $updateData['password'] = password_hash($data['password']);
+            $updateData['password'] = password_hash($data['password'],  PASSWORD_DEFAULT);
+        }
+
+        /**
+         * A password is required when creating a new user:
+         */
+        if (!$updateData['password'] && $createUserMode) {
+            $this->setMessage('U heeft geen geldig wachtwoord opgegeven', 'warning');
+            $this->redirect('profiel');
         }
 
         /**
@@ -411,9 +442,14 @@ class WebshopApp
             $fields[$i] = "{$val}=:{$val}";
         });
         $updateData['id'] = $user['id'];
-        $sql = 'UPDATE client SET ' .implode(', ', $fields).' WHERE id=:id';
+        if ($createUserMode) {
+            unset($updateData['id']);
+            $sql = 'INSERT INTO client SET ' . implode(', ', $fields);
+        } else {
+            $sql = 'UPDATE client SET ' .implode(', ', $fields).' WHERE id=:id';
+        }
         /**
-         * If the update statements fails, we do not want to show the natove DB message to our users
+         * If the update or insert statements fails, we do not want to show the native DB message to our users
          * so we redirect with a flash message
          */
         try {
@@ -422,8 +458,15 @@ class WebshopApp
             $this->setMessage("Uw gegevens zijn niet opgeslagen door een technisch probleem met onze website.", 'error');
             $this->redirect('profiel');
         }
-        $this->setMessage("Uw gewijzigde gegevens zijn opgeslagen.", 'success');
-        $this->redirect('profiel');
+        if ($createUserMode) {
+            $this->login($updateData['email'], $data['password']);
+            $this->clearMessage('success');
+            $this->setMessage("Uw profiel is aangemaakt en u bent automatisch ingelogd.", 'success');
+            $this->redirect();
+        } else {
+            $this->setMessage("Uw gewijzigde gegevens zijn opgeslagen.", 'success');
+            $this->redirect('profiel');
+        }
     }
 
     /**
@@ -456,7 +499,7 @@ class WebshopApp
         $_SESSION['user_id'] = (int)$user['id'];
         $_SESSION['user_name'] = $user['name'];
 
-        $this->setMessage("U bent met succes aangemeldd", 'success');
+        $this->setMessage("U bent met succes aangemeld", 'success');
         return true;
     }
 
@@ -472,11 +515,13 @@ class WebshopApp
 
     function inShoppingCart($product_id, $page = 'producten')
     {
+        /*
         $user = $this->getAppUser();
         if (!$user) {
             $this->setMessage("U moet eerst <a href='?page=inloggen'>Aanmelden</a> voordat u bij ons kunt bestellen", 'info');
             $this->redirect($page, '#');
         }
+        */
         $product = $this->getProduct($product_id);
         if (!$product) {
             $this->setMessage("Product niet gevonden", 'error');

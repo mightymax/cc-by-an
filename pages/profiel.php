@@ -1,10 +1,19 @@
 <?php
 //only logged in users have access to this page:
-$app->gatekeeper(); 
+// $app->gatekeeper(); 
 
 $user = $app->getAppUser();
+if ($user === false) {
+    $user = $app->getEmptyUser();
+} else {
+    $user['isNew'] = false;
+}
 if (isset($_POST['profiel'])) {
-    $app->saveProfile($_POST);
+    if ($app->getAppUser()) {
+        $app->saveProfile($_POST);
+    } else {
+        $app->saveProfile($_POST, true);
+    }
 }
 ?>
 <form class="profiel" action="?page=profiel" method="POST">
@@ -37,12 +46,12 @@ if (isset($_POST['profiel'])) {
     </div>
     <div class="row">
         <div class="three columns">
-            <label for="password">Wachtwoord</label>
-            <input type="password" name="password" id="password">
+            <label for="password">Wachtwoord <?php if ($user['isNew']):?> <i class="fas fa-asterisk"></i><?php endif?></label>
+            <input type="password" name="password" id="password" <?php if ($user['isNew']) echo 'required'; ?>>
         </div>
         <div class="three columns">
             <label for="password2"> (controle)</label>
-            <input type="password" name="password2" id="password2">
+            <input type="password" name="password2" id="password2" <?php if ($user['isNew']) echo 'required'; ?>>
         </div>
     </div>
 

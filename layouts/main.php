@@ -30,12 +30,12 @@
           <?php if ($app->getAppUser()): ?>
             <a class="button" href="?page=profiel"><i class="far fa-id-card"></i><span>Profiel</span></a>
             <a class="button" href="?page=logout"><i class="fas fa-sign-out-alt"></i> <span>Afmelden</span></a>
-            <?php if ($countShoppingCart = $app->countShoppingCart()) :?>
-            <a class="button" href="?page=winkelwagen"><i class="fas fa-shopping-cart"></i> <span>Winkelwagen </span> (<?php echo $countShoppingCart?>)</a>
-            <?php endif?>
           <?php else: ?>
             <a class="button" href="?page=inloggen"><i class="fas fa-sign-in-alt"></i> <span>Aanmelden</span></a>
           <?php endif?>
+          <?php if ($countShoppingCart = $app->countShoppingCart()) :?>
+            <a class="button" href="?page=winkelwagen"><i class="fas fa-shopping-cart"></i> <span>Winkelwagen </span> (<?php echo $countShoppingCart?>)</a>
+            <?php endif?>
         </div>
         </nav>
       </header>

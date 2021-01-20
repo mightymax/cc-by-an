@@ -21,6 +21,10 @@ $total_sum = 0;
 ?>
 <?php if ($checkout) : 
     $user = $app->getAppUser();
+    if (!$user) {
+        $app->setMessage('Om af te rekenen moet u eerst inloggen of een account aanmaken', 'info');
+        $app->redirect('inloggen');
+    }
     if ($checkout == 2) {
         $app->checkoutShoppingCart();
     }
@@ -37,7 +41,7 @@ U ontvangt van ons een factuur op uw emailadres <em><?php echo $user['email']?><
 <p>Als bovenstaand adres of e-mailadres onjuist is, pas dan eerst <a href="?page=profiel">uw profiel</a> aan.</p>
 <p>
     <a href="?page=winkelwagen&checkout=2">
-        <button>
+        <button class="button-primary">
             <i class="fas fa-check-double"></i>
             Ik ga akkoord met uw voorwaarden en wil onderstaande bestelling definitief plaatsen
         </button>
@@ -95,7 +99,11 @@ U ontvangt van ons een factuur op uw emailadres <em><?php echo $user['email']?><
         <th class="num">€ <?php echo number_format($total_sum, 2, ',', '.')?></th>
         <td>
         <?php if (!$checkout) :?>
-            <a href="?page=winkelwagen&amp;checkout=1" class="button"><i class="fas fa-cash-register"></i> Afrekenen</a>
+            <?php if ($user): ?>
+                <a href="?page=inloggen" class="button button-primary"><i class="fas fa-cash-register"></i>Aanmelden om af te rekenen</a>
+            <?php else: ?>
+                <a href="?page=winkelwagen&amp;checkout=1" class="button button-primary"><i class="fas fa-cash-register"></i> Afrekenen</a>
+            <?php endif?>
         <?php endif?> 
         </td>
     </tr>
