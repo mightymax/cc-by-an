@@ -192,6 +192,60 @@ class WebshopApp
         return $product;
     }
 
+    function saveProduct(Array $data){
+
+        /* Checks if input data is valid */
+    
+        if (isset($data['name']) && $data['name']) {
+            $storeData['name'] = $data['name'];
+        }
+        if (isset($data['description']) && $data['description']) {
+            $storeData['description'] = $data['description'];
+        }
+        if (isset($data['category']) && $data['category']) {
+            $category = $this->getCategory($data['category']);
+            if (!$category) {
+                $this->setMessage('Dit is geen bestaande categorie', 'warning');
+                $this->redirect('admin');
+            }
+            $storeData['category'] = $data['category'];
+        }
+        if (isset($data['price']) && intval($data['price'])){
+            $storeData['price'] = $data['price'];
+        } else {
+            $this->setMessage('Voer een getal in bij prijs', 'warning');
+            $this->redirect('admin');
+        }
+        
+        /* Submits newly created product to database */
+    
+        if (isset($data['id']) && intval($data['id'])) {
+            $product = $this->getProduct($data['id']);
+            if (!$product) {
+                $this->setMessage('Product niet gevonden', 'error');
+                $this->redirect('admin');
+            }
+            $sql = "UPDATE product SET name=:name, price=:price, description=:description, category=:category WHERE id=:id";
+        }   else {
+            $product = False;
+            $sql = "INSERT INTO product SET name=:name, price=:price, description=:description, category=:category";
+        }
+        $stmt=$this->conn->prepare($sql);
+        $stmt->bindParam(':name', $storeData['name']);
+        $stmt->bindParam(':price', $storeData['price'],PDO::PARAM_INT);
+        $stmt->bindParam(':description', $storeData['description']);
+        $stmt->bindParam(':category', $storeData['category'],PDO::PARAM_INT);
+        if ($product) {
+            $stmt->bindParam(':id', $product['id'],PDO::PARAM_INT);
+        }
+        if ($stmt->execute()) {
+            $this->setMessage('Product is met succes opgeslagen', 'success');
+        } else {
+            $this->setMessage('Systeem fout: product is niet opgeslagen', 'error');
+        }
+        $this->redirect('admin');   
+    }
+
     /**
      * Flash messages: store messages in session data until they are retrieved. 
      * 

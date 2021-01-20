@@ -22,22 +22,20 @@ if ($product == false) {
 
 <div class="row">
     <div class="five columns">
-        <div class="product">
-        <img src="./images/products/large/<?php echo $product['id']?>.jpg" alt="<?php echo $product['name']?>" style="width:100%;">
-        </div>
+        <img src="./images/products/large/<?php echo $product['id']?>.jpg" alt="<?php echo $product['name']?>">
     </div>
     <div class="seven columns">
         <div class="description">
-        <p><?php echo $product['description']?></p><br>
+        <?php echo nl2br($product['description'])?>
         </div>
     <p class="price_product">
         <span class="currency">€</span>
         <span class="integers"><?php echo intval($product['price']/100)?></span>
         <span class="currency">,<?php echo str_pad(fmod($product['price'], 100), 2, '0')?></span>
     </p>
-    <button type="button"><i class="fas fa-cart-plus"></i> In winkelwagen</button></a>
-        <?php if ($app->getAppUser(True)):?>
-            <a href="?page=admin&amp;product=<?php echo $product['id']?>">Bewerk product</a>
+    <a href="?page=producten&amp;category=<?php echo @$_REQUEST['category']?>&inShoppingCart=<?php echo $product['id']?>#product-<?php echo $product['id']?>"><button type="button"><i class="fas fa-cart-plus"></i> In winkelwagen</button></a>
+        <?php if ($app->getAppUser() && $app->getAppUser()['isAdmin']):?>
+            <a href="?page=admin&amp;product=<?php echo $product['id']?>"><button type="button"><i class="fas fa-edit"></i> Product bewerken</button></a>
         <?php endif ?>
     </div>
 </div>
