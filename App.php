@@ -416,7 +416,7 @@ Met vriendelijke groet,
 
 Het team van Cute Cloths By An.
         ";
-            mail($user['email'], 'Nieuw wachtwoord aangevraagd', $message);
+            mail($user['email'], 'Nieuw wachtwoord aangevraagd', $message, 'From: cc-by-an@lindeman.nu');
         }
 
         $this->setMessage('Als uw e-mailadres in ons systeem staat, sturen wij u een e-mail met een link waarmee u een nieuw wachtwoord kunt instellen.', 'success');
@@ -730,8 +730,8 @@ Het team van Cute Cloths By An.
 Bedankt voor uw bestelling. 
 Het ordernummer van uw bestelling is «{$bestelnummer}». 
 Zodra wij uw betaling van € {$sum_fmt} hebben ontvangen sturen wij uw producten op naar:
-Hoogeweg 40-B
-1851 PJ Heiloo
+{$user['streetname']} {$user['housenumber']}
+{$user['postalcode']} {$user['place']}
 
 Uw bestelling:
 {$bestelling}
@@ -741,17 +741,17 @@ Nogmaals bedankt voor uw bestelling en graag tot ziens in onze webshop!
 Het team van Cute Cloths By An.
         ";
 
-        $mailresult = mail($user['email'], 'Uw bestelling van Cute Cloths By An', $message);
+        $mailresult = mail($user['email'], 'Uw bestelling van Cute Cloths By An', $message, 'From: cc-by-an@lindeman.nu');
 
         if (false) {
-            $this->mollie();
+            return $this->mollie();
         }
 
         $this->setMessage("Bedankt voor uw bestelling. Wij sturen uw een e-mail met verdere instructies.", 'success');
         if (!$mailresult) {
-            $this->setMessage("Bedankt voor uw bestelling. Het is helaas niet gelukt om een e-mail te sturen, wij nemen z.s.m. contact met u op.<p><code>*** DEBUG START E-MAIL ***</code></p><p><blockquote><pre>{$message}</pre></blockquote></p><p><code>*** END E-MAIL ***</code></p>", 'warning');
+            $this->setMessage("Bedankt voor uw bestelling. Het is helaas niet gelukt om een e-mail te sturen, wij nemen z.s.m. contact met u op.", 'warning');
         } else {
-            $this->setMessage("Bedankt voor uw bestelling. Wij sturen uw een e-mail met verdere instructies.<p><code>*** DEBUG START E-MAIL ***</code></p><p><blockquote><pre>{$message}</pre></blockquote></p><p><code>*** END E-MAIL ***</code></p>", 'success');
+            $this->setMessage("Bedankt voor uw bestelling. Wij sturen uw een e-mail met verdere instructies.", 'success');
         }
         unset($_SESSION['shoppingcart']);
         $this->redirect();
@@ -759,6 +759,7 @@ Het team van Cute Cloths By An.
 
     function mollie()
     {
+        $bestelnummer = session_id();
         $protocol = isset($_SERVER['HTTPS']) && strcasecmp('off', $_SERVER['HTTPS']) !== 0 ? "https" : "http";
         $hostname = $_SERVER['HTTP_HOST'];
         $path = dirname(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']);
@@ -769,7 +770,6 @@ Het team van Cute Cloths By An.
         $webhookUrl = 'https://cc-by-an.lindeman.nu/webhook.php';
         
         $orderlines = [];
-        $bestelnummer = session_id();
         
         $user = $this->getAppUser();
         $mollie = new \Mollie\Api\MollieApiClient();
@@ -802,12 +802,12 @@ Het team van Cute Cloths By An.
             }
         }
         $address = [
-            "streetAndNumber" => "Hoogeweg 40-B",
-            "postalCode" => "1851 PJ",
-            "city" => "Heiloo",
+            "streetAndNumber" => $user['streetname'].' '.$user['housenumber'],
+            "postalCode" => $user['postalcode'],
+            "city" => $user['place'],
             "country" => "nl",
-            "givenName" => "Mees",
-            "familyName" => "Lindeman",
+            "givenName" => $user['name'],
+            "familyName" => $user['name'],
             "email" => $user['email']
         ];
         try {
