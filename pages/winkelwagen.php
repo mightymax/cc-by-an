@@ -34,8 +34,8 @@ U ontvangt van ons een factuur op uw emailadres <em><?php echo $user['email']?><
 <p>
     <blockquote>
     <?php echo $user['name'] ;?><br>
-    Hoogeweg 40-B <br>
-    1851 PJ Heiloo
+    <?php echo $user['streetname'] ;?> <?php echo $user['housenumber'] ;?> <br>
+    <?php echo $user['postalcode'] ;?> <?php echo $user['place'] ;?>
     </blockquote>
 </p>
 <p>Als bovenstaand adres of e-mailadres onjuist is, pas dan eerst <a href="?page=profiel">uw profiel</a> aan.</p>
