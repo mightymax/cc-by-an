@@ -47,6 +47,10 @@ switch ($page) {
     case 'winkelwagen':
         $title = ucfirst($page);
         break;
+    case 'resetpassword':
+        $title = "Nieuw wachtwoord aanvragen";
+        break;
+    case 'resetpassword':
     case 'logout':
         $app->logout();
         header('Location: ?page=home', true, 301);

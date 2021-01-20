@@ -240,11 +240,16 @@ class WebshopApp
      * In every page that requires a valid user, add this method on top of that page.
      * If no user is present, a Flash message is set and the user is redirected to the home page.
      */
-    function gateKeeper() 
+    function gateKeeper($needAdmin = false) 
     {
         $user = $this->getAppUser();
         if (!$user) {
             $this->setMessage("U heeft geen toegang tot deze pagina", 'warning');
+            $this->redirect();
+        }
+
+        if ($needAdmin && $user['isAdmin'] == false) {
+            $this->setMessage("U heeft geen rechten om deze pagina te bekijken", 'warning');
             $this->redirect();
         }
     }
@@ -291,13 +296,20 @@ class WebshopApp
      * @see https://www.w3schools.com/php/php_arrays_associative.asp
      * @return Associative Array with the User or False if no record matches the ID
      */
-    function getUser($id) 
+    function getUser($value, $field = 'id') 
     {
-        $stmt = $this->conn->prepare("SELECT * FROM client WHERE id=:id"); 
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        if ($field != 'id' && preg_match('/^[a-zA-Z_]+$/', $field)) {
+            $stmt = $this->conn->prepare("SELECT * FROM client WHERE {$field}=:value");
+            $stmt->bindParam(':value', $value);
+        } else {
+            $stmt = $this->conn->prepare("SELECT * FROM client WHERE id=:id"); 
+            $stmt->bindParam(':id', $value, PDO::PARAM_INT);
+        }
         $stmt->execute(); 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$user) return;
         $user['id'] = (int)$user['id'];
+        $user['isAdmin'] = $user['isadmin'] == 'Y';
         return $user;
     }
 
@@ -310,9 +322,51 @@ class WebshopApp
             'postalcode' => '',
             'housenumber' => '',
             'phone' => '',
+            'streetname' => '',
+            'place' => '',
+            'isadmin' => 'N',
+            'isAdmin' => false,
             'isNew' => true
         ];
     
+    }
+
+    function userForgotPassword ($email) {
+        if (!$email  || filter_var($email, FILTER_VALIDATE_EMAIL) == false) {
+            $this->setMessage('Een geldig emailadres is verplicht', 'warning');
+            $this->redirect('profiel');
+        }
+
+        $user = $this->getUser($email, 'email');
+        if ($user) {
+            $token = bin2hex(openssl_random_pseudo_bytes(16));
+            $stmt = $this->conn->prepare("UPDATE client SET token=:token WHERE id=:id"); 
+            $stmt->bindParam(':id', $user['id'], PDO::PARAM_INT);
+            $stmt->bindParam(':token', $token);
+            $stmt->execute();
+            $protocol = isset($_SERVER['HTTPS']) && strcasecmp('off', $_SERVER['HTTPS']) !== 0 ? "https" : "http";
+            $hostname = $_SERVER['HTTP_HOST'];
+            $path = dirname(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']);
+    
+            $resetUrl = "{$protocol}://{$hostname}{$path}/index.php?page=resetpassword&token={$token}";
+
+            $message = "Beste {$user['name']},
+
+We hebben een verzoek ontvangen voor een nieuw wachtwoord op uw e-mailadres. 
+Als u dat niet zelf heeft gedaan, kunt u dit bericht negeren.
+
+Heeft u inderdaad een nieuw wachtwoord aangevraagd, klik dan op deze link:
+{$resetUrl}
+
+Met vriendelijke groet,
+
+Het team van Cute Cloths By An.
+        ";
+            mail($user['email'], 'Nieuw wachtwoord aangevraagd', $message);
+        }
+
+        $this->setMessage('Als uw e-mailadres in ons systeem staat, sturen wij u een e-mail met een link waarmee u een nieuw wachtwoord kunt instellen.', 'success');
+        $this->redirect('inloggen');
     }
 
     /**
@@ -371,6 +425,26 @@ class WebshopApp
             $this->redirect('profiel');
         }
 
+        if (!isset($data['postalcode']) || !trim($data['postalcode'])) {
+            $this->setMessage('Een geldige postcode is verplicht', 'warning');
+            $this->redirect('profiel');
+        }
+
+        if (!isset($data['housenumber']) || !trim($data['housenumber'])) {
+            $this->setMessage('Een geldig huisnummer is verplicht', 'warning');
+            $this->redirect('profiel');
+        }
+
+        if (!isset($data['streetname']) || !trim($data['streetname'])) {
+            $this->setMessage('Een geldige straatnaam is verplicht', 'warning');
+            $this->redirect('profiel');
+        }
+        
+        if (!isset($data['place']) || !trim($data['place'])) {
+            $this->setMessage('Een geldige plaatsnaam is verplicht', 'warning');
+            $this->redirect('profiel');
+        }
+        
         /**
          * Only change if name differs from stored name
          */
@@ -397,6 +471,14 @@ class WebshopApp
          */
         if (isset($data['housenumber']) && $data['housenumber'] != $user['housenumber']) {
             $updateData['housenumber'] = $data['housenumber'];
+        }
+
+        if (isset($data['streetname']) && $data['streetname'] != $user['streetname']) {
+            $updateData['streetname'] = $data['streetname'];
+        }
+
+        if (isset($data['place']) && $data['place'] != $user['place']) {
+            $updateData['place'] = $data['place'];
         }
 
         /**
@@ -627,9 +709,10 @@ Het team van Cute Cloths By An.
         $hostname = $_SERVER['HTTP_HOST'];
         $path = dirname(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']);
 
-        $protocol = 'https';
-        $hostname = 'cc-by-an.lindeman.nu';
-        $path = '';
+        $redirectUrl = "{$protocol}://{$hostname}{$path}/index.php?page=home&confirm=1&order_id={$bestelnummer}";
+        $webhookUrl  = "{$protocol}://{$hostname}{$path}/webhook.php";
+
+        $webhookUrl = 'https://cc-by-an.lindeman.nu/webhook.php';
         
         $orderlines = [];
         $bestelnummer = session_id();
@@ -680,17 +763,12 @@ Het team van Cute Cloths By An.
                     "value" => sprintf('%0.2f', $sum/100)
                 ],
                 'billingAddress' => $address,
-                'shippingAddress' => $address,
-                "metadata" => [
-                    "order_id" => $bestelnummer,
-                    "description" => "Cute Cloths By An Bestelling"
-                ],
                 "locale" => "nl_NL",
                 "method" => "ideal",
                 'lines' => $orderlines,
                 "orderNumber" => strval($bestelnummer),
-                "redirectUrl" => "{$protocol}://{$hostname}{$path}/index.php?page=home&confirm=1&order_id={$bestelnummer}",
-                "webhookUrl"  => "{$protocol}://{$hostname}{$path}/webhook.php",
+                "redirectUrl" => $redirectUrl,
+                "webhookUrl"  => $webhookUrl,
             ]);
         } catch (\Mollie\Api\Exceptions\ApiException $e) {
             echo "API call failed: " . htmlspecialchars($e->getMessage());

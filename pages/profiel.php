@@ -31,24 +31,34 @@ if (isset($_POST['profiel'])) {
     </div>
     <div class="row">
         <div class="two columns">
-            <label for="postalcode">Postcode</label>
+            <label for="postalcode">Postcode <i class="fas fa-asterisk"></i></label>
             <input type="text" name="postalcode" id="postalcode" value="<?php echo $user['postalcode']?>">
         </div>
         <div class="two columns">
-            <label for="housenumber">Huisnummer</label>
-            <input type="text" name="housenumber" id="housenumber" value="<?php echo $user['housenumber']?>">
+            <label for="housenumber">Huisnummer <i class="fas fa-asterisk"></i></label>
+            <input type="text" name="housenumber" id="housenumber" required value="<?php echo $user['housenumber']?>">
         </div>
-        <div class="three columns">
-            <label for="phone">Telefoon </label>
+        <div class="four columns">
+            <label for="streetname">Straat <i class="fas fa-asterisk"></i></label>
+            <input type="text" name="streetname" id="streetname" required value="<?php echo $user['streetname']?>">
+        </div>
+    </div>
+    <div class="row">
+        <div class="four columns">
+            <label for="place">Plaatsnaam <i class="fas fa-asterisk"></i></label>
+            <input type="text" name="place" id="place" required value="<?php echo $user['place']?>">
+        </div>
+        <div class="four columns">
+            <label for="phone">Telefoon</label>
             <input type="text" name="phone" id="phone" value="<?php echo $user['phone']?>">
         </div>
     </div>
     <div class="row">
-        <div class="three columns">
+        <div class="two columns">
             <label for="password">Wachtwoord <?php if ($user['isNew']):?> <i class="fas fa-asterisk"></i><?php endif?></label>
             <input type="password" name="password" id="password" <?php if ($user['isNew']) echo 'required'; ?>>
         </div>
-        <div class="three columns">
+        <div class="two columns">
             <label for="password2"> (controle)</label>
             <input type="password" name="password2" id="password2" <?php if ($user['isNew']) echo 'required'; ?>>
         </div>
@@ -57,6 +67,10 @@ if (isset($_POST['profiel'])) {
         <div class="three columns">
             <label>&nbsp;</label>
             <button type="submit" class="button-primary"><i class="far fa-save"></i>  Opslaan</button>
+            <label></label>
+            <label><small><i class="fas fa-asterisk"></i> = verplicht veld</small></label>
+        </div>
+        <div class="three columns">
         </div>
     </div>
 </form>
