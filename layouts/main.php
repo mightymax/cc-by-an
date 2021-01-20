@@ -25,12 +25,12 @@
             <li><a href="?" <?php if ($page=='home') echo 'class="active"'?>>Home</a></li>
             <li><a href="?page=producten" <?php if ($page=='producten') echo 'class="active"'?>>Producten</a></li>
             <li><a href="?page=contact" <?php if ($page=='contact') echo 'class="active"'?>>Contact</a></li>
-            <?php if ($app->getAppUser() && $app->getAppUser()['isAdmin']):?>
-            <li><a href="?page=admin" <?php if ($page=='admin') echo 'class="active"'?>>Product toevoegen</a></li>
-            <?php endif ?>
           </ul>
           <div id="user">
           <?php if ($app->getAppUser()): ?>
+            <?php if ($app->getAppUser() && $app->getAppUser()['isAdmin']):?>
+            <a class="button" href="?page=admin"><i class="fas fa-plus-square"></i><span> Product</a>
+            <?php endif ?>
             <a class="button" href="?page=profiel"><i class="far fa-id-card"></i><span> Profiel</span></a>
             <a class="button" href="?page=logout"><i class="fas fa-sign-out-alt"></i> <span>Afmelden</span></a>
           <?php else: ?>
