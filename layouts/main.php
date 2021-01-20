@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">  
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600&display=swap" rel="stylesheet"> 
-    <link href="styles.css" rel="stylesheet">
+    <link href="styles.css?<?php echo time()?>" rel="stylesheet">
   </head>
   <body>
     <!-- see bug https://bugzilla.mozilla.org/show_bug.cgi?id=1404468 -->
@@ -39,7 +39,7 @@
         </div>
         </nav>
       </header>
-      <main>
+      <main class="page-<?php echo $page ?>">
         <?php if ($page == 'producten'): ?>
           <div id="categories">
           <?php foreach($app->getCategories() as $category): 

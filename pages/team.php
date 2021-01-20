@@ -1,3 +1,3 @@
 <article>
-    <h2>Maak kennis met ons team</h2>
+    <h4>Maak kennis met ons team</h4>
 </article>

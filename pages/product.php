@@ -1,34 +1,8 @@
-<style>
-.product {
-  width: 400px;
-  height: 400px;
-  overflow: hidden;
-  margin: 0 auto;
-  border: 1px solid black;
+<?php 
+if (isset($_REQUEST['inShoppingCart'])) {
+    $app->inShoppingCart(intval($_REQUEST['inShoppingCart']));
 } 
-
-.product img {
-    width: 100%;
-    transition: 0.5s all ease-in-out;
-}
-
-.product:hover img {
-    transform: scale(1.5);
-}
-
-p {
-    font-size: 20px;
-}
-
-.price_product .currency {
-    font-size: 20px;
-}
-
-.price_product .integers {
-    font-size: 30px;
-}
-</style>
-
+?>
 <?php
 if (!isset($_REQUEST['product'])) {
     // doe iets (want de URL is niet wat we verwachten), bv redirect naar categorie pagina
@@ -53,7 +27,7 @@ if ($product == false) {
         </div>
     </div>
     <div class="seven columns">
-        <div class="p">
+        <div class="description">
         <p><?php echo $product['description']?></p><br>
         </div>
     <p class="price_product">
@@ -61,6 +35,11 @@ if ($product == false) {
         <span class="integers"><?php echo intval($product['price']/100)?></span>
         <span class="currency">,<?php echo str_pad(fmod($product['price'], 100), 2, '0')?></span>
     </p>
-    <button type="button"><i class="fas fa-cart-plus"></i> In winkelwagen</button>
+    
+    <?php if ($app->getAppUser()): ?>
+    <a href="?page=producten&amp;category=<?php echo @$_REQUEST['category']?>&inShoppingCart=<?php echo $row['id']?>#product-<?php echo $row['id']?>"><button type="button"><i class="fas fa-cart-plus"></i> In winkelwagen</button></a>
+    <?php else: ?>
+    <a href="?page=inloggen"><button type="button"><i class="fas fa-sign-in-alt"></i> Log in om te bestellen</button></a>
+    <?php endif ?>
     </div>
 </div>

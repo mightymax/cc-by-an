@@ -557,3 +557,35 @@ blockquote {
     border-left: solid 5px #ccc;
     padding-left: 10px;
 }
+
+/* Product page
+––––––––––––––––––––––––––––––––––––––––––––––––––*/
+
+.page-product .product {
+  width: 400px;
+  height: 400px;
+  overflow: hidden;
+  margin: 0 auto;
+  border: 1px solid black;
+} 
+
+.page-product .product img {
+    width: 100%;
+    transition: 0.5s all ease-in-out;
+}
+
+.page-product .product:hover img {
+    transform: scale(1.5);
+}
+
+.page-product .description {
+    font-size: 20px;
+}
+
+.page-product .price_product .currency {
+    font-size: 20px;
+}
+
+.page-product .price_product .integers {
+    font-size: 30px;
+}
