@@ -36,8 +36,8 @@ if ($product == false) {
         <span class="currency">,<?php echo str_pad(fmod($product['price'], 100), 2, '0')?></span>
     </p>
     <button type="button"><i class="fas fa-cart-plus"></i> In winkelwagen</button></a>
-        <?php if ($app->getAppUser()):?>
-        <a href="?page=admin">Product bewerken</a>
+        <?php if ($app->getAppUser(True)):?>
+            <a href="?page=admin&amp;product=<?php echo $product['id']?>">Bewerk product</a>
         <?php endif ?>
     </div>
 </div>

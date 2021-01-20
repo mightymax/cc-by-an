@@ -334,7 +334,7 @@ class WebshopApp
             }
         }
 
-        // container for the daata that the user wants us to update:
+        // container for the data that the user wants us to update:
         $updateData = [];
 
         /** 
