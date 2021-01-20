@@ -627,9 +627,10 @@ Het team van Cute Cloths By An.
         $hostname = $_SERVER['HTTP_HOST'];
         $path = dirname(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']);
 
-        $protocol = 'https';
-        $hostname = 'cc-by-an.lindeman.nu';
-        $path = '';
+        $redirectUrl = "{$protocol}://{$hostname}{$path}/index.php?page=home&confirm=1&order_id={$bestelnummer}";
+        $webhookUrl  = "{$protocol}://{$hostname}{$path}/webhook.php";
+
+        $webhookUrl = 'https://cc-by-an.lindeman.nu/webhook.php';
         
         $orderlines = [];
         $bestelnummer = session_id();
@@ -680,17 +681,12 @@ Het team van Cute Cloths By An.
                     "value" => sprintf('%0.2f', $sum/100)
                 ],
                 'billingAddress' => $address,
-                'shippingAddress' => $address,
-                "metadata" => [
-                    "order_id" => $bestelnummer,
-                    "description" => "Cute Cloths By An Bestelling"
-                ],
                 "locale" => "nl_NL",
                 "method" => "ideal",
                 'lines' => $orderlines,
                 "orderNumber" => strval($bestelnummer),
-                "redirectUrl" => "{$protocol}://{$hostname}{$path}/index.php?page=home&confirm=1&order_id={$bestelnummer}",
-                "webhookUrl"  => "{$protocol}://{$hostname}{$path}/webhook.php",
+                "redirectUrl" => $redirectUrl,
+                "webhookUrl"  => $webhookUrl,
             ]);
         } catch (\Mollie\Api\Exceptions\ApiException $e) {
             echo "API call failed: " . htmlspecialchars($e->getMessage());
