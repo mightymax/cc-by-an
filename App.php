@@ -425,7 +425,7 @@ Met vriendelijke groet,
 
 Het team van Cute Cloths By An.
         ";
-            mail($user['email'], 'Nieuw wachtwoord aangevraagd', $message, 'From: cc-by-an@lindeman.nu');
+            $this->mail($user['email'], 'Nieuw wachtwoord aangevraagd', $message, 'From: cc-by-an@lindeman.nu');
         }
 
         $this->setMessage('Als uw e-mailadres in ons systeem staat, sturen wij u een e-mail met een link waarmee u een nieuw wachtwoord kunt instellen.', 'success');
@@ -828,7 +828,7 @@ Nogmaals bedankt voor uw bestelling en graag tot ziens in onze webshop!
 Het team van Cute Cloths By An.
         ";
 
-        $mailresult = mail($user['email'], 'Uw bestelling van Cute Cloths By An', $message, 'From: cc-by-an@lindeman.nu');
+        $mailresult = $this->mail($user['email'], 'Uw bestelling van Cute Cloths By An', $message, 'From: cc-by-an@lindeman.nu');
 
         if (false) {
             return $this->mollie();
@@ -1004,7 +1004,7 @@ Nieuw status: {$newStatus}
 Met vriendelijke groet,
 
 Het team van Cute Cloths By An.";
-                mail($user['email'], 'De status van uw order is gewijzigd', $message, 'From: cc-by-an@lindeman.nu');
+                $this->mail($user['email'], 'De status van uw order is gewijzigd', $message, 'From: cc-by-an@lindeman.nu');
             } else {
                 $this->setMessage("De status van deze order is ongewijzigd.", 'info');
             }
@@ -1030,6 +1030,33 @@ Het team van Cute Cloths By An.";
     function getOrderStatussen()
     {
         return ['nieuw', 'betaald', 'verzonden', 'geannuleerd'];
+    }
+
+    function config($key = null)
+    {
+        static $config;
+        if (null == $config) {
+            if (file_exists(__DIR__ . '/.ENV')) {
+                $config = parse_ini_file(__DIR__. '/.ENV');
+            } else {
+                $config = [];
+            }
+        }
+        if ($key) {
+            if (isset($config[$key])) return $config[$key];
+        } else {
+            return $config;
+        }
+    }
+
+    function mail($to, $subject, $message, $additional_headers) 
+    {
+        $sendmail = $this->config('sendmail');
+        if (null !== $sendmail && false === (bool)$sendmail ) {
+            $this->setMessage("<strong>To:</strong> {$to}\n<strong>Subject:</strong> {$subject}\n\n<strong>Message:</strong>\n{$message}", 'debug');
+            return true;
+        }
+        mail($to, $subject, $message, $additional_headers);
     }
 
 }

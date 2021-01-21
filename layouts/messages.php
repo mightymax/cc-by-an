@@ -12,3 +12,15 @@ foreach ($messages as $type => $icon) {
         HTML;
     }
 }
+
+$debug = $app->config('debug');
+if (true === (bool)$debug) {
+    if ($msg = $app->getMessage('debug')) {
+        echo <<<HTML
+        <blockquote>
+            <p><code>*** DEBUG ***</code></p>
+            <pre>{$msg}</pre>
+        </blockquote>
+        HTML;
+    }
+}
