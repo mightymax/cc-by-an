@@ -1,7 +1,7 @@
 <?php
 //edit user from an administrator:
-if (isset($_REQUEST['user'])) {
-    $app->gateKeeper(True);
+if ($app->formIsPosted() && isset($_REQUEST['user'])) {
+    $app->gateKeeper(true);
     $user = $app->getUser($_REQUEST['user']);
     if (!$user) {
         $app->setMessage('Gebruiker `'.$_REQUEST['user'].'` niet gevonden', 'warning');

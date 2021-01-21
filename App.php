@@ -444,7 +444,7 @@ Het team van Cute Cloths By An.
             $user = $this->getEmptyUser();
         } else {
             //is Admin user trying to update a user?
-            if (isset($data['id'])) {
+            if (isset($data['id']) && (int)$data['id']) {
                 $this->gateKeeper(true);
                 $user = $this->getUser($data['id']);
                 if (!$user) {
