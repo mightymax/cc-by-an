@@ -19,7 +19,7 @@ if ($product == false) {
     return;
 }
 ?>
-
+<article class="product">
 <div class="row">
     <div class="five columns">
         <img src="./images/products/large/<?php echo $product['id']?>.jpg" alt="<?php echo $product['name']?>">
@@ -39,3 +39,4 @@ if ($product == false) {
         <?php endif ?>
     </div>
 </div>
+</article>

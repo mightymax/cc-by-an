@@ -345,6 +345,7 @@ div#categories {
 article.product {
     background-color: #fff;
     position: relative;
+    overflow:hidden;
     background-clip: border-box;
     border: 1px solid rgba(0,0,0,.125);
     border-radius: .25rem;
@@ -381,7 +382,13 @@ article.product .body {
 article.product img {
   width: 100%;
   display: flex;
+  transition: 0.3s all ease-in-out;
 }
+
+article.product img:hover {
+  transform: scale(1.02);
+}
+
 
 .message {
   padding:15px;
@@ -565,13 +572,9 @@ blockquote {
   width: 100%;
   overflow: hidden;
   margin: 0 auto;
-  border: 1px solid black;
-  transition: 0.5s all ease-in-out;
+  border-right : 1px solid #000;
 } 
 
-.page-product .columns:hover img {
-    transform: scale(1.02);
-}
 
 @media (min-width: 550px){
 .page-product .description {
@@ -590,4 +593,8 @@ blockquote {
 
 div.row {
   margin-bottom: 20px;
-} 
+}
+
+div.row:last-child {
+  margin-bottom: 0px;
+}
