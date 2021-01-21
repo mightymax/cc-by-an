@@ -42,7 +42,7 @@ $users = $app->getUsers();
             </a>
         </td>
         <td>
-            <a href="?page=users&amp;delete=<?php echo $user['id']?>" onclick="return confirm('Weet je zeker dat je deze gebruiker defitief wilt verwijderen?')" title="Verwijder deze gebruiker">
+            <a href="?page=users&amp;delete=<?php echo $user['id']?>" onclick="return confirm('Weet je zeker dat je deze gebruiker definitief wilt verwijderen?')" title="Verwijder deze gebruiker">
                 <i class="fas fa-trash"></i>
             </a>
         </td>
