@@ -19,7 +19,7 @@
     <script>0</script>
     <div class="container">
       <header>
-        <h1>Cute Cloths by An</h1>
+        <a href="?"><h1>Cute Cloths by An</h1></a>
         <nav>
           <ul>
             <li><a href="?" <?php if ($page=='home') echo 'class="active"'?>>Home</a></li>

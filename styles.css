@@ -445,7 +445,11 @@ header h1 {
   background-repeat: no-repeat;
   background-position: 0;
   padding-left: 70px;
-  
+  color: inherit;
+}
+
+header a {
+  color: inherit;
 }
 
 .container:after,
