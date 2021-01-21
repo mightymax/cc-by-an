@@ -4,8 +4,13 @@ if (isset($_REQUEST['toggleAdmin'])) {
     $app->toggleUserAdmin($_REQUEST['toggleAdmin']);
     $app->redirect('users', '#user-' . $_REQUEST['toggleAdmin']);
 }
-$users = $app->getUsers();
 
+if (isset($_REQUEST['delete'])) {
+  $app->deleteUser($_REQUEST['delete']);
+  $app->redirect('users');
+}
+
+$users = $app->getUsers();
 
 ?>
 <h2>Beheer gebruikers</h2>
@@ -18,6 +23,7 @@ $users = $app->getUsers();
       <th>Postcode</th>
       <th>Huisnr</th>
       <th>Plaats</th>
+      <th></th>
       <th></th>
     </tr>
   </thead>
@@ -33,6 +39,11 @@ $users = $app->getUsers();
         <td>
             <a href="?page=users&amp;toggleAdmin=<?php echo $user['id']?>" title="Geef/Ontneem deze gebruiker beheerdersrechten">
                 <i class="fas fa-user<?php echo $user['isadmin'] == 'Y' ? '-cog':'';?>"></i>
+            </a>
+        </td>
+        <td>
+            <a href="?page=users&amp;delete=<?php echo $user['id']?>" onclick="return confirm('Weet je zeker dat je deze gebruiker defitief wilt verwijderen?')" title="Verwijder deze gebruiker">
+                <i class="fas fa-trash"></i>
             </a>
         </td>
     </tr>

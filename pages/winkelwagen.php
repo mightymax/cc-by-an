@@ -102,9 +102,19 @@ U ontvangt van ons een factuur op uw emailadres <em><?php echo $user['email']?><
         <td>
         <?php if (!$checkout) :?>
             <?php if (!$user): ?>
-                <a href="?page=inloggen" class="button button-primary"><i class="fas fa-cash-register"></i>Aanmelden om af te rekenen</a>
+                <a href="?page=inloggen">
+                    <button class="button-primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Aanmelden om af te rekenen
+                    </button>
+                </a>
             <?php else: ?>
-                <a href="?page=winkelwagen&amp;checkout=1" class="button button-primary"><i class="fas fa-cash-register"></i> Afrekenen</a>
+                <a href="?page=winkelwagen&checkout=1">
+                    <button class="button-primary">
+                        <i class="fas fa-cash-register"></i>
+                            Afrekenen
+                    </button>
+                </a>
             <?php endif?>
         <?php endif?> 
         </td>

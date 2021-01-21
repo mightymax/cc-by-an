@@ -635,8 +635,26 @@ Het team van Cute Cloths By An.
         $stmt = $this->conn->prepare("UPDATE client SET isadmin = IF(isadmin='Y', 'N', 'Y') WHERE id=:id"); 
 
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        if (!$stmt->execute()) {
-            $this->setMessage('Systeemfout: niet gelrukt om isadmin status te wijzigen', 'error');
+        try {
+            $stmt->execute();
+        } catch (Exception $e) {
+            $this->setMessage('Systeemfout: niet gelukt om isadmin status te wijzigen', 'error');
+        }
+    }
+
+    function deleteUser($id) 
+    {
+        if ((int)$id == $this->getAppUser()['id']) {
+            header('Location: https://www.113.nl/', true, 301);
+            exit;
+        }
+        $stmt = $this->conn->prepare("DELETE FROM client WHERE id=:id"); 
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        try {
+            $stmt->execute();
+            $this->setMessage('De gebruiker is definitief verwijderd.', 'success');
+        } catch (Exception $e) {
+            $this->setMessage('Systeemfout: niet gelukt om de gebruiker te verwijderen', 'error');
         }
     }
 
@@ -752,14 +770,48 @@ Het team van Cute Cloths By An.
         $sum = 0;
         $bestelling = "";
 
+        $orderlines = [];
         foreach ($_SESSION['shoppingcart'] as $id => $num_items) {
             $product = $this->getProduct($id);
             if ($product) {
                 $sum += $num_items * $product['price'];
                 $bestelling .= "{$num_items} x {$product['name']} à € " . number_format($product['price']/100, 2, ',', '.') . "\n";
+                //store orderline for DB storage later on:
+                $orderlines[] = ['product' => $product['id'], 'ammount' => $num_items, 'price' => $product['price']];
             }
         }
         $sum_fmt = number_format($sum/100, 2, ',', '.');
+
+        //store order in database:
+        $sql = 'INSERT INTO `order` SET client=:client, `date`=NOW(), ammount=:sum, status="nieuw"';
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':client', $user['id'], PDO::PARAM_INT);
+        $stmt->bindParam(':sum', $sum, PDO::PARAM_INT);
+        try {
+            $stmt->execute();
+        } catch (Exception $e) {
+            $this->setMessage('Er is iets misgegegaan bij het opslaan van uw order. Probeer het later nogmaals.', 'error');
+            $this->redirect();
+        }
+        $order_id = (int)$this->conn->lastInsertId();
+
+        //create orderlines:
+        $sql = 'INSERT INTO `order_line` (`order`, `product`, `ammount`, `price`) VALUES (:order, :product, :ammount, :price)';
+        $stmt = $this->conn->prepare($sql);
+        foreach ($orderlines as $orderline) {
+            $stmt->bindParam(':order', $order_id, PDO::PARAM_INT);
+            $stmt->bindParam(':product', $orderline['product'], PDO::PARAM_INT);
+            $stmt->bindParam(':ammount', $orderline['ammount'], PDO::PARAM_INT);
+            $stmt->bindParam(':price', $orderline['price'], PDO::PARAM_INT);
+            try {
+                $stmt->execute();
+            } catch (Exception $e) {
+                $this->conn->query('DELETE FROM `order` where id=' . $order_id);
+                $this->setMessage('Er is iets misgegegaan bij het opslaan van uw order-regel. Probeer het later nogmaals.', 'error');
+                $this->redirect();
+            }
+        }
+
         $message = "Beste {$user['name']},
 
 Bedankt voor uw bestelling. 
@@ -876,6 +928,108 @@ Het team van Cute Cloths By An.
             return $count;
         }, 0);
     }
+
+    function getOrders($status = null) {
+        // de tabelnaam "order" is wat ongelukkig gekozen, dat is een reserved term in SQL
+        // we moeten daarom overal in de query waar we de tabelnaam gebruiken `order` gebruiken (dus tussen "backticks")
+        $sql = "
+        SELECT 
+            client.*, 
+            `order`.*, 
+            SUM(order_line.ammount) AS num_items 
+        FROM `order` 
+        INNER JOIN `client` ON client.id = `order`.client
+        INNER JOIN `order_line` ON order_line.`order` = `order`.id
+        ";
+        if ($status) $sql .= " WHERE status=" . $this->conn->quote($status);
+        $sql .= " GROUP BY `order`.id";
+        $sql .= " ORDER BY `date` DESC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(); 
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    function getOrder($id) 
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM `order` WHERE id=:id"); 
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute(); 
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
     
+    function getOrderDetails($order_id) 
+    {
+        $order = $this->getOrder($order_id);
+        if (!$order) return;
+
+        $client = $this->getUser($order['client']);
+        if (!$client) return;
+
+        $stmt = $this->conn->prepare('SELECT order_line.*, product.name, product.price AS current_price FROM order_line LEFT JOIN product ON product.id=order_line.product WHERE `order`=:order');
+        $stmt->bindParam(':order', $order['id'], PDO::PARAM_INT);
+        $stmt->execute(); 
+        $order_lines = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return [
+            'order' => $order,
+            'client' => $client,
+            'order_lines' => $order_lines
+        ];
+    }
+
+    function setOrderStatus(Array $order, $newStatus) 
+    {
+        $order = $this->getOrder($order['id']);
+        if (!$order) {
+            $this->setMessage('Order niet gevonden', 'warning');
+            $this->redirect('orders');
+        }
+        $statussen = $this->getOrderStatussen();
+        if (!in_array($newStatus, $statussen)) {
+            $this->setMessage('Ongeldige orderstatus', 'warning');
+        } else {
+            if ($newStatus != $order['status']) {
+                $this->setMessage("Status gewijzigd van <span class=\"order-status order-status-{$order['status']}\">{$order['status']}</span> naar <span class=\"order-status order-status-{$newStatus}\">{$newStatus}</span>", 'success');
+                $stmt = $this->conn->prepare('UPDATE `order` SET status=:status WHERE id=:id');
+                $stmt->bindParam(':id', $order['id'], PDO::PARAM_INT);
+                $stmt->bindParam(':status', $newStatus);
+                $stmt->execute(); 
+                $user = $this->getUser($order['client']);
+                $message = "Beste {$user['name']},
+
+We hebben de status van uw order met nummer {$order['id']} aangepast:
+Oude status: {$order['status']}
+Nieuw status: {$newStatus}
+
+Met vriendelijke groet,
+
+Het team van Cute Cloths By An.";
+                mail($user['email'], 'De status van uw order is gewijzigd', $message, 'From: cc-by-an@lindeman.nu');
+            } else {
+                $this->setMessage("De status van deze order is ongewijzigd.", 'info');
+            }
+        }
+        $this->redirect('order', '&order=' . $order['id']);
+    
+    }
+
+    function deleteOrder($id) 
+    {
+        $order = $this->getOrder($id);
+        if (!$order) {
+            $this->setMessage('Order niet gevonden', 'warning');
+            $this->redirect('orders');
+        }
+        $stmt = $this->conn->prepare('DELETE FROM `order` WHERE id=:id');
+        $stmt->bindParam(':id', $order['id'], PDO::PARAM_INT);
+        $stmt->execute(); 
+        $this->setMessage("Order is definitief verwijderd.", 'success');
+        $this->redirect('orders');
+    }
+
+    function getOrderStatussen()
+    {
+        return ['nieuw', 'betaald', 'verzonden', 'geannuleerd'];
+    }
 
 }

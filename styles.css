@@ -608,6 +608,39 @@ div.row {
   margin-bottom: 20px;
 }
 
-div.row:last-child {
+div.row div.row, div.row:last-child {
   margin-bottom: 0px;
+}
+
+
+.order-status {
+  vertical-align: middle;
+  display: inline-block;
+  padding: 0 4px;
+  border-radius: 3px;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 15px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.05);
+  white-space: nowrap;
+}
+
+.order-status-nieuw {
+  background-color: #b3b3b3;
+}
+
+.order-status-betaald {
+  background-color: orange;
+}
+
+.order-status-geannuleerd {
+  background-color: #0FA0CE;
+  text-decoration: line-through;
+}
+
+.order-status-verzonden {
+  background-color: #3c763d;
 }
