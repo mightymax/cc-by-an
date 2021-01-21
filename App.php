@@ -319,6 +319,15 @@ class WebshopApp
         exit;
     }
 
+    function getUsers($limit = 1000000, $offset = 0)
+    {
+        $stmt = $this->conn->prepare('SELECT * FROM client ORDER BY `name` LIMIT :offset, :limit');
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute(); 
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);        
+    }
+
     /**
      * Function used to get the user that is currently logged in. 
      * Since it can be called from different places, we want to make sure that the user is
@@ -434,11 +443,23 @@ Het team van Cute Cloths By An.
         if ($createUserMode) {
             $user = $this->getEmptyUser();
         } else {
-            $user = $this->getAppUser();
-            if (!$user) {
-                session_unset();
-                $this->setMessage("Deze gebruiker komt niet voor in ons systeem.", 'error');
-                $this->redirect();
+            //is Admin user trying to update a user?
+            if (isset($data['id'])) {
+                $this->gateKeeper(true);
+                $user = $this->getUser($data['id']);
+                if (!$user) {
+                    $app->setMessage('Gebruiker niet gevonden', 'warning');
+                    $app->redirect('users');
+                }
+                $redirectPage = 'users';
+            } else {
+                $user = $this->getAppUser();
+                if (!$user) {
+                    session_unset();
+                    $this->setMessage("Deze gebruiker komt niet voor in ons systeem.", 'error');
+                    $this->redirect();
+                }
+                $redirectPage = 'profiel';
             }
         }
 
@@ -602,6 +623,20 @@ Het team van Cute Cloths By An.
         } else {
             $this->setMessage("Uw gewijzigde gegevens zijn opgeslagen.", 'success');
             $this->redirect('profiel');
+        }
+    }
+
+    function toggleUserAdmin($id) 
+    {
+        if ((int)$id == $this->getAppUser()['id']) {
+            $this->setMessage('Het is niet verstandig om je eigen adminrechten weg te nemen &hellip; ', 'warning');
+            $this->redirect('users', '#user-' . $id);
+        }
+        $stmt = $this->conn->prepare("UPDATE client SET isadmin = IF(isadmin='Y', 'N', 'Y') WHERE id=:id"); 
+
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        if (!$stmt->execute()) {
+            $this->setMessage('Systeemfout: niet gelrukt om isadmin status te wijzigen', 'error');
         }
     }
 
@@ -841,6 +876,6 @@ Het team van Cute Cloths By An.
             return $count;
         }, 0);
     }
+    
 
 }
-

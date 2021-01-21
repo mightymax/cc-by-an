@@ -561,7 +561,7 @@ td a.button {
     cursor: default;
 }
 
-td .fas {
+.page-winkelwagen td .fas {
     font-size: 1rem;
     padding: 0 2px;
 }

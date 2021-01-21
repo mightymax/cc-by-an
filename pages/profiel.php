@@ -1,14 +1,23 @@
 <?php
-//only logged in users have access to this page:
-// $app->gatekeeper(); 
-
-$user = $app->getAppUser();
-if ($user === false) {
-    $user = $app->getEmptyUser();
-} else {
+//edit user from an administrator:
+if (isset($_REQUEST['user'])) {
+    $app->gateKeeper(True);
+    $user = $app->getUser($_REQUEST['user']);
+    if (!$user) {
+        $app->setMessage('Gebruiker `'.$_REQUEST['user'].'` niet gevonden', 'warning');
+        $app->redirect('users');
+    }
     $user['isNew'] = false;
+} else {
+    $user = $app->getAppUser();
+    if ($user === false) {
+        $user = $app->getEmptyUser();
+    } else {
+        $user['isNew'] = false;
+    }
 }
-if (isset($_POST['profiel'])) {
+
+if ($app->formIsPosted() && isset($_POST['profiel'])) {
     if ($app->getAppUser()) {
         $app->saveProfile($_POST);
     } else {
@@ -21,6 +30,7 @@ if (isset($_POST['profiel'])) {
     <div class="row">
         <div class="four columns">
             <?php echo $app->getCrfsToken() ?>
+            <input type="hidden" name="id" value="<?php echo @$_REQUEST['user']?>">
             <input type="hidden" name="profiel" value="1">
             <label for="naam">Naam <i class="fas fa-asterisk"></i></label>
             <input type="text" name="name" id="name" required value="<?php echo $user['name']?>">
