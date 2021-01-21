@@ -24,7 +24,7 @@ if ($product == false) {
     <div class="five columns">
         <img src="./images/products/large/<?php echo $product['id']?>.jpg" alt="<?php echo $product['name']?>">
     </div>
-    <div class="seven columns">
+    <div class="seven columns product-metadata">
         <div class="description">
         <?php echo nl2br($product['description'])?>
         </div>
@@ -33,9 +33,9 @@ if ($product == false) {
         <span class="integers"><?php echo intval($product['price']/100)?></span>
         <span class="currency">,<?php echo str_pad(fmod($product['price'], 100), 2, '0')?></span>
     </p>
-    <a href="?page=producten&amp;category=<?php echo @$_REQUEST['category']?>&inShoppingCart=<?php echo $product['id']?>#product-<?php echo $product['id']?>"><button type="button"><i class="fas fa-cart-plus"></i> In winkelwagen</button></a>
+    <a href="?page=producten&amp;category=<?php echo @$_REQUEST['category']?>&inShoppingCart=<?php echo $product['id']?>#product-<?php echo $product['id']?>"><button type="button"><i class="fas fa-cart-plus"></i> <span>In winkelwagen</span></button></a>
         <?php if ($app->getAppUser() && $app->getAppUser()['isAdmin']):?>
-            <a href="?page=admin&amp;product=<?php echo $product['id']?>"><button type="button"><i class="fas fa-edit"></i> Product bewerken</button></a>
+            <a href="?page=admin&amp;product=<?php echo $product['id']?>"><button type="button"><i class="fas fa-edit"></i> <span>Product bewerken</span></button></a>
         <?php endif ?>
     </div>
 </div>

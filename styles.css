@@ -241,7 +241,7 @@ form .columns input, form .columns textarea {
   header a.button {
     padding: 0 10px;
   }
-  header a.button span {
+  a.button span, button span {
     display: none;
   }
   h1 {
@@ -263,6 +263,10 @@ form .columns input, form .columns textarea {
 
   .products article {
     margin-bottom: 40px;
+  }
+
+  .product-metadata {
+    padding: 10px;
   }
 }
 
