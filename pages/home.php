@@ -1,5 +1,6 @@
-<p class="lead">Welkom bij onze webshop! U kunt hier terecht voor het unieke haakwerk van An.</p>
-<p>Klik op een categorie om onze producten te bekijken:</p>
+<h2>Welkom in onze webshop!</h2>
+<p class="lead">U kunt hier terecht voor het unieke haakwerk van An.
+    Klik op een categorie om onze producten te bekijken:</p>
 <div class="row products categories">
 <?php foreach ($app->getTeasers() as $i => $row) : ?>
         <article class="four columns product">

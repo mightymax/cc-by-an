@@ -43,6 +43,7 @@ switch ($page) {
     case 'producten':
     case 'product':
     case 'admin':
+    case 'addproduct':
     case 'profiel':
     case 'winkelwagen':
         $title = ucfirst($page);
@@ -58,7 +59,6 @@ switch ($page) {
     // If no page is requested, or someone tries to mess by asking a non-existing page, 
     // simply show the home page
     default:
-        $title = 'Haakwerk';
         $page = 'home';
         break;
 }

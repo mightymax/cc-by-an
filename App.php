@@ -206,7 +206,7 @@ class WebshopApp
             $category = $this->getCategory($data['category']);
             if (!$category) {
                 $this->setMessage('Dit is geen bestaande categorie', 'warning');
-                $this->redirect('admin');
+                $this->redirect('addproduct');
             }
             $storeData['category'] = $data['category'];
         }
@@ -214,7 +214,7 @@ class WebshopApp
             $storeData['price'] = $data['price'];
         } else {
             $this->setMessage('Voer een getal in bij prijs', 'warning');
-            $this->redirect('admin');
+            $this->redirect('addproduct');
         }
         
         /* Submits newly created product to database */
@@ -223,7 +223,7 @@ class WebshopApp
             $product = $this->getProduct($data['id']);
             if (!$product) {
                 $this->setMessage('Product niet gevonden', 'error');
-                $this->redirect('admin');
+                $this->redirect('addproduct');
             }
             $sql = "UPDATE product SET name=:name, price=:price, description=:description, category=:category WHERE id=:id";
         }   else {
@@ -243,7 +243,7 @@ class WebshopApp
         } else {
             $this->setMessage('Systeem fout: product is niet opgeslagen', 'error');
         }
-        $this->redirect('admin');   
+        $this->redirect('addproduct');   
     }
 
     /**

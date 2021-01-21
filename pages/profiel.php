@@ -16,6 +16,7 @@ if (isset($_POST['profiel'])) {
     }
 }
 ?>
+<h2>Pas hier uw profiel aan</h2>
 <form class="form" action="?page=profiel" method="POST">
     <div class="row">
         <div class="four columns">

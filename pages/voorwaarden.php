@@ -1,3 +1,4 @@
+    <h2>Onze voorwaarden</h2>
     <p><small>Deze voorwaarden bevatten 11 punten:</small></p>
     <ol class="list-inline">
         <li><a href="#h1">Algemeen</a></li>
@@ -13,17 +14,17 @@
         <li><a href="#h11">Geschillen</a></li>
     </ol>
     <article>
-        <h3 id="h1">1. Algemeen</h3>
+        <h4 id="h1">1. Algemeen</h4>
         <p>Deze algemene leverings- en betalingsvoorwaarden maken deel uit van alle offertes en overeenkomsten inzake het verrichten van leveringen en/of diensten door de leverancier, voor zover niet door beide partijen hiervan uitdrukkelijk en schriftelijk is afgeweken. Een verwijzing door de afnemer naar eigen inkoop- of andere voorwaarden wordt door de leverancier niet aanvaard.</p>
     </article>
 
     <article>
-        <h3 id="h2">2. Aanbieding</h3>
+        <h4 id="h2">2. Aanbieding</h4>
         <p>Elke van de leverancier uitgane aanbieding is vrijblijvend.</p>
     </article>
 
     <article>
-        <h3 id="h3">3. Overeenkomst</h3>
+        <h4 id="h3">3. Overeenkomst</h4>
         <p class="num-par">3.1</p>
         <p>Indien de overeenkomst schriftelijk wordt aangegaan, komt deze tot stand op de dag van ondertekening van het contract door de leverancier, onderscheidenlijk op de dag van verzending van de schriftelijke opdrachtbevestiging door de leverancier.</p>
         <p class="num-par">3.2</p>
@@ -37,7 +38,7 @@
     </article>
 
     <article>
-        <h3 id="h4">4. Levering</h3>
+        <h4 id="h4">4. Levering</h4>
         <p class="num-par">4.1</p>
         <p>De levertijd gaat in op het moment van totstandkoming van de overeenkomst.</p>
         <p class="num-par">4.2</p>
@@ -59,12 +60,12 @@
     </article>
 
     <article>
-        <h3 id="h5">5. Eigendomsvoorbehoud</h3>
+        <h4 id="h5">5. Eigendomsvoorbehoud</h4>
         <p>Onverminderd het in artikel 4 leden 2 en 3 gestelde, gaat de eigendom van de producten eerst op de afnemer over wanneer al het door de afnemer aan de leverancier uit hoofde van levering of werkzaamheden verschuldigde, met inbegrip van rente en kosten, volledig aan de leverancier is voldaan.</p>
     </article>
 
     <article>
-        <h3 id="h6">6. Betaling</h3>
+        <h4 id="h6">6. Betaling</h4>
         <p class="num-par">6.1</p>
         <p>Onverminderd hetgeen in lid 2 vermeld en tenzij uitdrukkelijk anders werd overeengekomen luiden de betalingscondities van de leverancier: netto bij bestelling.</p>
         <p class="num-par">6.2</p>
@@ -79,26 +80,26 @@
     </article>
 
     <article>
-        <h3 id="h7">7. Reclames</h3>
+        <h4 id="h7">7. Reclames</h4>
         <p>De afnemer is gehouden de producten onmiddellijk na aankomst op het bedrijf van afnemer of op afgesproken afleverlocatie te keuren. Manco’s of transportschade dienen onmiddellijk aan de vervoerder of uiterlijk binnen 7 dagen aan de leverancier te worden gemeld. Indien de afnemer zich hiervan niet houdt, wordt hij geacht de producten te hebben geaccepteerd.</p>
         <p>Een reclame kan nimmer aanleiding zijn, ook niet wanneer deze tijdig is ingediend, tot opschorting van de betalingsverplichting van de afnemer. Producten, welke worden geremplaceerd, worden in rekening gebracht tenzij het gereclameerde product reeds door de leverancier retour ontvangen is.</p>
         <p>Retourzending dient binnen 30 dagen na terechte reclame plaats te vinden, waarna tot creditering zal worden overgegaan. Producten worden slechts na voorafgaande toestemming van de leverancier geretourneerd. Slechts indien aan de eisen is voldaan, zal de leverancier de kosten van de retourzending voor zijn rekening nemen.</p>
     </article>
 
     <article>
-        <h3 id="h8">8. Verzekering</h3>
+        <h4 id="h8">8. Verzekering</h4>
         <p>Eventuele verzekering geschiedt steeds voor rekening van de afnemer.</p>
     </article>
 
     <article>
-        <h3 id="h9">9. Garantie</h3>
+        <h4 id="h9">9. Garantie</h4>
         <p>De leverancier garandeert dat geleverde producten doelmatig en op de juiste wijze in verband met haar gebruiksdoel vervaardigd zijn. Producten of onderdelen hiervan, die aanwijsbare fabricagefouten mochten vertonen, worden kosteloos vervangen.</p>
         <p>Buiten de garantie vallen in ieder geval gebreken, die optreden in dan wel geheel of gedeeltelijk het gevolg zijn van: a) de niet-inachtneming van bedienings- en onderhoudsvoorschriften danwel ander dan het normaal voorziene gebruik. b) normale slijtage. c) montage/installatie of reparatie door derden, waaronder begrepen de afnemer.</p>
         <p>De periode waarover de leverancier gehouden is de in dit artikel omschreven garantieverplichtingen na te komen, alsmede de inhoud daarvan, staan vermeld in het door hem of door leverancier bij het product geleverde garantiebewijs.</p>
     </article>
 
     <article>
-        <h3 id="h10">10. Aansprakelijkheid</h3>
+        <h4 id="h10">10. Aansprakelijkheid</h4>
         <p class="num-par">10.1</p>
         <p>De aansprakelijkheid van de leverancier is beperkt tot de nakoming van de in artikel 9 van deze voorwaarde omschreven garantieverplichtingen.</p>
         <p class="num-par">10.2</p>
@@ -108,7 +109,7 @@
     </article>
 
     <article>
-        <h3 id="h11">11. Geschillen</h3>
+        <h4 id="h11">11. Geschillen</h4>
         <p class="num-par">11.1</p>
         <p>Op alle door de leverancier gesloten overeenkomsten en daaruit voortvloeiende geschillen is het Nederlands recht van toepassing.</p>
         <p class="num-par">11.2</p>

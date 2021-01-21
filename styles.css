@@ -237,7 +237,7 @@ form .columns input, form .columns textarea {
   padding-right: 25px;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 800px) {
   header a.button {
     padding: 0 10px;
   }
@@ -268,6 +268,11 @@ form .columns input, form .columns textarea {
   .product-metadata {
     padding: 10px;
   }
+
+  h2 {
+    clear: both;
+  }
+
 }
 
  a.button {

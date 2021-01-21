@@ -14,6 +14,7 @@ if (isset($_REQUEST['shoppingCartDelete'])) {
 
 ?>
 <?php if (!$app->countShoppingCart()) :?>
+    <h2>Uw winkelwagen</h2>
     <p class="message info"><i class="fas fa-info"></i> Uw winkelwagen is momenteel leeg.</p>
 <?php return; endif; 
 $num_items_total = 0;
@@ -29,6 +30,7 @@ $total_sum = 0;
         $app->checkoutShoppingCart();
     }
 ?>
+<h2>Uw winkelwagen</h2>
 <p>Kijk uw uw winkelwagen hieronder nog een keer goed na. Nadat u onderstaande order heeft bevestigd is uw bestelling compleet.
 U ontvangt van ons een factuur op uw emailadres <em><?php echo $user['email']?></em>, zodra u die betaalt heeft, sturen wij uw order naar het onderstaande adres:</p>
 <p>
