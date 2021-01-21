@@ -33,33 +33,20 @@ $app->startSession();
 
 // Use the request super global to get the page that the users wants to see
 // @see https://www.w3schools.com/php/php_superglobals.asp
-$page = @$_REQUEST['page'];
-switch ($page) {
-    case 'voorwaarden':
-    case 'privacy':
-    case 'team':
-    case 'contact':
-    case 'inloggen':
-    case 'producten':
-    case 'product':
-    case 'admin':
-    case 'addproduct':
-    case 'profiel':
-    case 'winkelwagen':
-    case 'resetpassword':
-    case 'home':
-        break;
-    case 'logout':
-        $app->logout();
-        header('Location: ?page=home', true, 301);
-        exit;
-    // If no page is requested, or someone tries to mess by asking a non-existing page, 
-    // show an error page and send HTTP 404 error Not Found
-    default:
-        // https://en.wikipedia.org/wiki/HTTP_404
-        http_response_code(404);
-        $page = '404';
-        break;
+
+if (!isset($_REQUEST['page'])) $page = 'home';
+else $page = $_REQUEST['page'];
+
+// Check if $page only contains simple letters:
+if (!preg_match('/^[a-z]+$/', $page)) {
+    $page = 404;
+}
+
+//check if $page exists:
+$pageFile = __DIR__ .'/pages/' . $page . '.php';
+if (!file_exists($pageFile) || !is_file($pageFile) || !is_readable($pageFile)) {
+    $page = 404;
+    $pageFile = __DIR__ .'/pages/' . $page . '.php';
 }
 
 // Include our layout page a.k.a. our View

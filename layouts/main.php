@@ -34,7 +34,7 @@
           // include the messages and the main page. Pay attention to the path, __DIR__ contains the current
           // Php path of this script
           include __DIR__ . '/messages.php';
-          include __DIR__ . "/../pages/{$page}.php";
+          include $pageFile ;
         ?>
       </main>
       <footer>

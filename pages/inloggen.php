@@ -1,4 +1,9 @@
 <?php
+//Logout:
+if (isset($_REQUEST['logout'])) {
+  $app->logout();
+}
+
 if ($app->getAppUser()) {
   // User is already logged in, redirect to profile
   $app->redirect('profiel');
