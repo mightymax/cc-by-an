@@ -5,7 +5,7 @@
 
 /**
  * Most webservers prevent errors from showing up un the webpage, which is a good thing
- * But since we are developing we need all the info to make sure evrything works as expected.
+ * But since we are developing we need all the info to make sure everything works as expected.
  */
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', 1);
@@ -46,20 +46,19 @@ switch ($page) {
     case 'addproduct':
     case 'profiel':
     case 'winkelwagen':
-        $title = ucfirst($page);
-        break;
     case 'resetpassword':
-        $title = "Nieuw wachtwoord aanvragen";
+    case 'home':
         break;
-    case 'resetpassword':
     case 'logout':
         $app->logout();
         header('Location: ?page=home', true, 301);
         exit;
     // If no page is requested, or someone tries to mess by asking a non-existing page, 
-    // simply show the home page
+    // show an error page and send HTTP 404 error Not Found
     default:
-        $page = 'home';
+        // https://en.wikipedia.org/wiki/HTTP_404
+        http_response_code(404);
+        $page = '404';
         break;
 }
 
