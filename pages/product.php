@@ -25,7 +25,7 @@ if ($product == false) {
         <img src="./images/products/large/<?php echo $product['id']?>.jpg" alt="<?php echo $product['name']?>">
     </div>
     <div class="seven columns product-metadata">
-        <div class="description">
+        <div class="description"><br>
         <?php echo nl2br($product['description'])?>
         </div>
     <p class="price_product">

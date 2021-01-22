@@ -1,6 +1,6 @@
 <?php 
 if (isset($_REQUEST['inShoppingCart'])) {
-    $app->inShoppingCart(intval($_REQUEST['inShoppingCart']));
+    $pap->inShoppingCart(intval($_REQUEST['inShoppingCart']));
 } 
 ?>
 <?php foreach ($app->getProducts(@$_REQUEST['category']) as $i => $row) : ?>
