@@ -36,7 +36,7 @@ if ($product == false) {
     </p>
     <a href="?page=producten&amp;category=<?php echo @$_REQUEST['category']?>&inShoppingCart=<?php echo $product['id']?>#product-<?php echo $product['id']?>"><button type="button"><i class="fas fa-cart-plus"></i> <span>In winkelwagen</span></button></a>
         <?php if ($app->getAppUser() && $app->getAppUser()['isAdmin']):?>
-            <a href="?page=admin&amp;product=<?php echo $product['id']?>"><button type="button"><i class="fas fa-edit"></i> <span>Product bewerken</span></button></a>
+            <a href="?page=addproduct&amp;product=<?php echo $product['id']?>"><button type="button"><i class="fas fa-edit"></i><span>Product bewerken</span></button></a>
         <?php endif ?>
     </div>
 </div>

@@ -2,16 +2,21 @@
 $app->gateKeeper(True);
 $categories = $app->getCategories();
 
-if ($app->formIsPosted()){
-    $app->saveProduct($_POST);
-}
+if ($app->formIsPosted() && (isset($_POST['deleteproduct']))):
+    $app->deleteProduct($_POST);
+elseif ($app->formIsPosted()):
+    $app->editProduct($_POST);
+endif;
+
 
 if (isset($_REQUEST['product'])) {
     $product = $app->getProduct($_REQUEST['product']);
 }
 ?>
 
-<form method="POST" action="?page=admin">
+
+<br>
+<form method="POST" action="?page=addproduct">
     <div class="row">
         <div class="four columns">
             <?php echo $app->getCrfsToken() ?>
@@ -49,5 +54,11 @@ if (isset($_REQUEST['product'])) {
             <label></label>
             <button class="button-primary" type="submit"><i class="far fa-save"></i><span> Opslaan</span></button> 
         </div>
+        <?php if (isset($_REQUEST['product'])):?>
+            <div class="three columns">
+            <label></label>
+            <button class="button-primary" type="submit" name="deleteproduct" value="deleteproduct"><i class="fas fa-trash-alt"></i><span> Verwijderen</span></button> 
+        </div>
+        <?php endif ?>
     </div>
 </form>

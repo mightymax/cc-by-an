@@ -192,7 +192,27 @@ class WebshopApp
         return $product;
     }
 
-    function saveProduct(Array $data){
+    function deleteProduct(Array $data)
+    {
+        if (isset($data['id']) && intval($data['id'])) {
+            $product = $this->getProduct($data['id']);
+            if (!$product) {
+                $this->setMessage('Product niet gevonden', 'error');
+                $this->redirect('producten');
+            }
+        }
+        $stmt = $this->conn->prepare('DELETE FROM `product` WHERE id=:id');
+        $stmt->bindParam(':id', $product['id'], PDO::PARAM_INT);
+        $stmt->execute(); 
+        if ($stmt->execute()) {
+            $this->setMessage('Product is met succes verwijderd', 'success');
+        } else {
+            $this->setMessage('Systeem fout: product is niet opgeslagen', 'error');
+        }
+        $this->redirect('producten');
+    }
+
+    function editProduct(Array $data){
 
         /* Checks if input data is valid */
     
