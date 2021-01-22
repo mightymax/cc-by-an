@@ -22,7 +22,7 @@
         <a href="?"><h1>Cute Cloths by An</h1></a>
         <nav>
           <ul>
-            <?php foreach (['home', 'producten', 'contact'] as $_page) :?>
+            <?php foreach (['home', 'producten', 'over'] as $_page) :?>
               <li><a href="?page=<?php echo $_page?>" <?php if ($page==$_page) echo 'class="active"'?>><?php echo ucfirst($_page)?></a></li>
             <?php endforeach?>
           </ul>

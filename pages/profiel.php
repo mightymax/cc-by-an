@@ -76,7 +76,6 @@ if ($app->formIsPosted() && isset($_POST['profiel'])) {
     </div>
     <div class="row">
         <div class="three columns">
-            <label>&nbsp;</label>
             <button type="submit" class="button-primary"><i class="far fa-save"></i>  Opslaan</button>
             <label></label>
             <label><small><i class="fas fa-asterisk"></i> = verplicht veld</small></label>

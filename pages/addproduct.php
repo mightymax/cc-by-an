@@ -50,15 +50,9 @@ if (isset($_REQUEST['product'])) {
         </div>
     </div>
     <div class="row">
-        <div class="three columns">  
+        <div class="four columns">  
             <label></label>
-            <button class="button-primary" type="submit"><i class="far fa-save"></i><span> Opslaan</span></button> 
+            <button class="button-primary" type="submit"><i class="far fa-save"></i><span> Opslaan</span></button><?php if (isset($_REQUEST['product'])):?><button class="button-primary" type="submit" name="deleteproduct" value="deleteproduct"><i class="fas fa-trash-alt"></i><span> Verwijderen</span></button><?php endif ?> 
         </div>
-        <?php if (isset($_REQUEST['product'])):?>
-            <div class="three columns">
-            <label></label>
-            <button class="button-primary" type="submit" name="deleteproduct" value="deleteproduct"><i class="fas fa-trash-alt"></i><span> Verwijderen</span></button> 
-        </div>
-        <?php endif ?>
     </div>
 </form>

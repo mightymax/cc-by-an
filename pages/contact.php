@@ -1,5 +1,30 @@
 <h2>Klantenservice en contact</h2>
 <article>
-    <p class="lead">Onze medewerkers helpen u graag verder!</p>
-    <p>Wilt u meer informatie, heeft u specifieke wensen of wilt graag advies van één van onze productspecialisten? Neem dan direct contact op met onze klantenservice. U kunt rekenen op persoonlijke aandacht en ondersteuning met kennis van zaken. Wij zijn u graag van dienst. Product eerst wilt zien? Breng dan een bezoek aan onze showroom.</p>
+    <p class="lead">Wij helpen u graag verder!</p>
+    <p>Wilt u meer informatie, heeft u specifieke wensen, of heeft u een klacht? Vul dan dit contact formulier in:</p>
 </article>
+<form class="form" action="?page=contact" method="POST">
+    <div class="row">
+        <div class="five columns">
+            <label for="name">Naam</label>
+            <input type="text" id="name" name="name">
+        </div>
+    </div>
+    <div class="row">
+        <div class="five columns">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email">
+        </div>
+    </div>
+    <div class="row">
+        <div class="eight columns">
+            <label for="subject">Uw vraag/ opmerking</label>
+            <textarea id="subject" name="subject" style="height:200px"></textarea>
+        </div>
+    </div>
+    <div class="row">
+        <div class="eight columns">
+            <button class="button-primary" type="submit"><i class="fas fa-paper-plane"></i><span> Verstuur</span></button>
+        </div>
+    </div>
+</form>
