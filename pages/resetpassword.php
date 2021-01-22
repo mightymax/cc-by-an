@@ -23,6 +23,8 @@ if ($app->formIsPosted()) {
     $app->redirect();
 }
 ?>
+<h2>Wachtwoord herstellen</h2>
+<p>U bent hier omdat u een link heeft aangeklikt om uw wachtwoord te herstellen. Vul hieronder een nieuw wachtwoord in waarmee u voortaan wilt inloggen.</p>
 <form class="form" action="?page=resetpassword" method="POST">
     <div class="row">
         <div class="three columns">

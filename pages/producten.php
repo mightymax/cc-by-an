@@ -3,6 +3,15 @@ if (isset($_REQUEST['inShoppingCart'])) {
     $pap->inShoppingCart(intval($_REQUEST['inShoppingCart']));
 } 
 ?>
+<div id="categories">
+<?php foreach($app->getCategories() as $category): 
+    $primaryClass = (@$_REQUEST['category'] == $category['id']) ? "button-primary" : "";
+?>
+    <a class="button <?php echo $primaryClass?> " href="?page=producten&amp;category=<?php echo $category['id']?>"><?php echo $category['name']?></a>
+<?php endforeach?>
+</div>
+<h2>Producten</h2>
+
 <?php foreach ($app->getProducts(@$_REQUEST['category']) as $i => $row) : ?>
     <?php if ($i % 3 == 0):?>
         <div class="row products">

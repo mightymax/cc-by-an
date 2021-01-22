@@ -1,4 +1,9 @@
 <?php
+//Logout:
+if (isset($_REQUEST['logout'])) {
+  $app->logout();
+}
+
 if ($app->getAppUser()) {
   // User is already logged in, redirect to profile
   $app->redirect('profiel');
@@ -20,6 +25,7 @@ if (isset($_POST['login'])) {
   $app->redirect($page);
 }
 ?>
+<h2>Inloggen op onze webshop</h2>
 <form action="?page=inloggen" method="POST">
   <div class="row">
       <div class="four columns">
@@ -39,18 +45,18 @@ if (isset($_POST['login'])) {
   </div>
 </form>
 <form action="?" method="GET">
-  <div class="row" style="margin-bottom: 0px;">
-    <div class="four columns"><h4>Nog geen account?</h4></div>
+  <div class="row" style="margin: 20px 0 0 0;">
+    <div class="six columns"><h4>Nog geen account?</h4></div>
   </div>
-  <div class="row">
-    <div class="four columns">
+  <div class="row" style="margin-bottom: 20px;">
+    <div class="six columns">
       <button type="submit" class="button" name="page" value="profiel"><i class="fas fa-user"></i>  Maak nu een nieuw account</button>
     </div>
   </div>
 </form>
 <form action="?" method="GET">
   <div class="row" style="margin-bottom: 0px;">
-    <div class="four columns"><h4>Wachtwoord vergeten?</h4></div>
+    <div class="six columns"><h4>Wachtwoord vergeten?</h4></div>
   </div>
   <div class="row">
     <div class="four columns">

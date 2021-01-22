@@ -1,3 +1,4 @@
 db-schema.mwb.bak
 .DS_Store
 vendor
+.ENV

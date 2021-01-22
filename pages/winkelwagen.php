@@ -14,6 +14,7 @@ if (isset($_REQUEST['shoppingCartDelete'])) {
 
 ?>
 <?php if (!$app->countShoppingCart()) :?>
+    <h2>Uw winkelwagen</h2>
     <p class="message info"><i class="fas fa-info"></i> Uw winkelwagen is momenteel leeg.</p>
 <?php return; endif; 
 $num_items_total = 0;
@@ -29,6 +30,7 @@ $total_sum = 0;
         $app->checkoutShoppingCart();
     }
 ?>
+<h2>Uw winkelwagen</h2>
 <p>Kijk uw uw winkelwagen hieronder nog een keer goed na. Nadat u onderstaande order heeft bevestigd is uw bestelling compleet.
 U ontvangt van ons een factuur op uw emailadres <em><?php echo $user['email']?></em>, zodra u die betaalt heeft, sturen wij uw order naar het onderstaande adres:</p>
 <p>
@@ -100,9 +102,19 @@ U ontvangt van ons een factuur op uw emailadres <em><?php echo $user['email']?><
         <td>
         <?php if (!$checkout) :?>
             <?php if (!$user): ?>
-                <a href="?page=inloggen" class="button button-primary"><i class="fas fa-cash-register"></i>Aanmelden om af te rekenen</a>
+                <a href="?page=inloggen">
+                    <button class="button-primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Aanmelden om af te rekenen
+                    </button>
+                </a>
             <?php else: ?>
-                <a href="?page=winkelwagen&amp;checkout=1" class="button button-primary"><i class="fas fa-cash-register"></i> Afrekenen</a>
+                <a href="?page=winkelwagen&checkout=1">
+                    <button class="button-primary">
+                        <i class="fas fa-cash-register"></i>
+                            Afrekenen
+                    </button>
+                </a>
             <?php endif?>
         <?php endif?> 
         </td>

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Cute Cloths by An">
     <meta name="author" content="Mees Lindeman">
-    <title>Cute Cloths by An • <?php echo $title?></title>
+    <title>Cute Cloths by An • <?php echo ucfirst($page)?></title>
     <!-- Used for icons, see https://fontawesome.com/icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -19,51 +19,22 @@
     <script>0</script>
     <div class="container">
       <header>
-        <h1>Cute Cloths by An</h1>
+        <a href="?"><h1>Cute Cloths by An</h1></a>
         <nav>
           <ul>
-            <li><a href="?" <?php if ($page=='home') echo 'class="active"'?>>Home</a></li>
-            <li><a href="?page=producten" <?php if ($page=='producten') echo 'class="active"'?>>Producten</a></li>
-            <li><a href="?page=contact" <?php if ($page=='contact') echo 'class="active"'?>>Contact</a></li>
+            <?php foreach (['home', 'producten', 'contact'] as $_page) :?>
+              <li><a href="?page=<?php echo $_page?>" <?php if ($page==$_page) echo 'class="active"'?>><?php echo ucfirst($_page)?></a></li>
+            <?php endforeach?>
           </ul>
-          <div id="user">
-          <?php if ($app->getAppUser()): ?>
-            <?php if ($app->getAppUser() && $app->getAppUser()['isAdmin']):?>
-            <a class="button" href="?page=admin"><i class="fas fa-plus-square"></i><span> Product</a>
-            <?php endif ?>
-            <a class="button" href="?page=profiel"><i class="far fa-id-card"></i><span> Profiel</span></a>
-            <a class="button" href="?page=logout"><i class="fas fa-sign-out-alt"></i> <span>Afmelden</span></a>
-          <?php else: ?>
-            <a class="button" href="?page=inloggen"><i class="fas fa-sign-in-alt"></i> <span>Aanmelden</span></a>
-          <?php endif?>
-          <?php if ($countShoppingCart = $app->countShoppingCart()) :?>
-            <a class="button" href="?page=winkelwagen"><i class="fas fa-shopping-cart"></i> <span>Winkelwagen </span> (<?php echo $countShoppingCart?>)</a>
-            <?php endif?>
-        </div>
+          <?php include __DIR__ . '/usermenu.php' ?>
         </nav>
       </header>
       <main class="page-<?php echo $page ?>">
-        <?php if ($page == 'producten'): ?>
-          <div id="categories">
-          <?php foreach($app->getCategories() as $category): 
-              $primaryClass = (@$_REQUEST['category'] == $category['id']) ? "button-primary" : "";
-          ?>
-              <a class="button <?php echo $primaryClass?> " href="?page=producten&amp;category=<?php echo $category['id']?>"><?php echo $category['name']?></a>
-          <?php endforeach?>
-          </div>
-          <h2><?php echo $title?></h2>
-        <?php elseif ($page == 'product'): ?>
-          <?php $id = intval($_REQUEST['product']);
-                $product = $app->getProduct($id);?>
-          <h2><?php echo $product['name']?></h2>
-        <?php else: ?>
-        <h2><?php echo $title?></h2>
-        <?php endif ?>
         <?php 
           // include the messages and the main page. Pay attention to the path, __DIR__ contains the current
           // Php path of this script
           include __DIR__ . '/messages.php';
-          include __DIR__ . "/../pages/{$page}.php";
+          include $pageFile ;
         ?>
       </main>
       <footer>
