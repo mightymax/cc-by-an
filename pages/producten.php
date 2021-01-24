@@ -1,6 +1,6 @@
 <?php 
 if (isset($_REQUEST['inShoppingCart'])) {
-    $pap->inShoppingCart(intval($_REQUEST['inShoppingCart']));
+    $app->inShoppingCart(intval($_REQUEST['inShoppingCart']));
 } 
 ?>
 <div id="categories">
