@@ -61,7 +61,7 @@ if ($app->formIsPosted() && isset($_POST['profiel'])) {
         </div>
         <div class="four columns">
             <label for="phone">Telefoon</label>
-            <input type="text" name="phone" id="phone" value="<?php echo $user['phone']?>">
+            <input type="text" name="phone" id="phone" value="<?php echo $user['phone']?>" maxlength="10">
         </div>
     </div>
     <div class="row">

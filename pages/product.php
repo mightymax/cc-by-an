@@ -19,6 +19,7 @@ if ($product == false) {
     return;
 }
 ?>
+
 <h2><?php echo $product['name']?></h2>
 <article class="product">
 <div class="row">

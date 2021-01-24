@@ -7,7 +7,8 @@
     Al snel kreeg ik de vraag of ik ook op bestelling haakte en zodoende maakte ik ook enkele projecten in opdracht. 
     Ondertussen zag ik allemaal leuke andere dingen om te haken en uit te proberen.
     Nadat er steeds meer vraag kwam naar mijn werken ben ik een kleine onderneming begonnen.
-    Ik bedacht de naam Cute Cloths by An: Lieve doeken van An, en bestelde hier etiketten en knoopjes van om mijn werken te personaliseren. 
+    Ik bedacht de naam Cute Cloths by An: Lieve doeken van An, en bestelde hier etiketten en knoopjes van om mijn werken te personaliseren.
+    Ik werk veel met 100% katoen of acrylgarens van een goede kwaliteit.  
     </p>
 </article>
 <article>

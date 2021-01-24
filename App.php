@@ -1079,4 +1079,39 @@ Het team van Cute Cloths By An.";
         mail($to, $subject, $message, $additional_headers);
     }
 
+    function sendContactform(Array $data) {
+        if (isset($data['name']) && $data['name']) {
+            $formData['name'] = $data['name'];
+        }
+        
+        if (!isset($data['email']) || !$data['email']  || filter_var($data['email'], FILTER_VALIDATE_EMAIL) == false) {
+            $this->setMessage('Een geldig emailadres is verplicht', 'warning');
+            $this->redirect('contact');
+        }
+
+        if (isset($data['subject']) && $data['subject']) {
+            $formData['subject'] = $data['subject'];
+        } else {
+            $this->setMessage('Voer een vraag/ opmerking in','warning');
+            $this->redirect('contact');
+        }
+
+        $ToEmail = 'mees@lindeman.nu'; 
+        $EmailSubject = 'CC-by-An contactformulier'; 
+        $mailheader = "From: ".$_POST['email']."\r\n"; 
+        $mailheader .= "Reply-To: ".$_POST['email']."\r\n"; 
+        $mailheader .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
+        $MESSAGE_BODY = "Er is een contactformulier verzonden:\r\n 
+            Naam: {$formData['name']}\r\n 
+            Email adres: {$_POST['email']}\r\n
+            Vraag/ opmerking: {$formData['subject']}\r\n"; 
+        mail($ToEmail, $EmailSubject, $MESSAGE_BODY, $mailheader) or die ("Failure");
+        
+        if ($_POST['email']<>'') {
+            $this->setMessage('Uw formulier is verzonden', 'success');
+        } else {
+            $this->setMessage('Uw formulier is niet verzonden, excuus', 'error');
+        }
+        $this->redirect('home');
+    }
 }

@@ -13,6 +13,7 @@
         <li><a href="#h10">Aansprakelijkheid</a></li>
         <li><a href="#h11">Geschillen</a></li>
     </ol>
+    <br>
     <article>
         <h4 id="h1">1. Algemeen</h4>
         <p>Deze algemene leverings- en betalingsvoorwaarden maken deel uit van alle offertes en overeenkomsten inzake het verrichten van leveringen en/of diensten door de leverancier, voor zover niet door beide partijen hiervan uitdrukkelijk en schriftelijk is afgeweken. Een verwijzing door de afnemer naar eigen inkoop- of andere voorwaarden wordt door de leverancier niet aanvaard.</p>

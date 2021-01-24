@@ -1,3 +1,9 @@
+<?php    
+if ((isset($_POST['sendform']))){
+    $app->sendContactform($_POST);
+}
+?>
+
 <h2>Klantenservice en contact</h2>
 <article>
     <p class="lead">Wij helpen u graag verder!</p>
@@ -5,14 +11,14 @@
 </article>
 <form class="form" action="?page=contact" method="POST">
     <div class="row">
-        <div class="five columns">
+        <div class="four columns">
             <label for="name">Naam</label>
             <input type="text" id="name" name="name">
         </div>
     </div>
     <div class="row">
-        <div class="five columns">
-            <label for="email">Email</label>
+        <div class="four columns">
+            <label for="email">Emailadres</label>
             <input type="email" id="email" name="email">
         </div>
     </div>
@@ -23,8 +29,8 @@
         </div>
     </div>
     <div class="row">
-        <div class="eight columns">
-            <button class="button-primary" type="submit"><i class="fas fa-paper-plane"></i><span> Verstuur</span></button>
+        <div class="three columns">
+            <button name="sendform" value="sendform" class="button-primary" type="submit"><i class="fas fa-paper-plane"></i><span> Verstuur</span></button>
         </div>
     </div>
 </form>
