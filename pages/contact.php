@@ -14,19 +14,19 @@ if ($app->formIsPosted()){
         <div class="four columns">
             <?php echo $app->getCrfsToken() ?>
             <label for="name">Naam</label>
-            <input type="text" id="name" name="name">
+            <input type="text" id="name" name="name" required>
         </div>
     </div>
     <div class="row">
         <div class="four columns">
             <label for="email">Emailadres</label>
-            <input type="email" id="email" name="email">
+            <input type="email" id="email" name="email" required>
         </div>
     </div>
     <div class="row">
         <div class="eight columns">
             <label for="subject">Uw vraag/opmerking</label>
-            <textarea id="subject" name="subject" style="height:200px"></textarea>
+            <textarea id="subject" name="subject" style="height:200px" required></textarea>
         </div>
     </div>
     <div class="row">
