@@ -62,7 +62,6 @@ function uploadImg(Array $data) {
 
 ?>
 
-
 <br>
 <form method="POST" action="?page=addproduct" enctype="multipart/form-data">
     <div class="row">
