@@ -1076,12 +1076,14 @@ Het team van Cute Cloths By An.";
             $this->setMessage("<strong>To:</strong> {$to}\n<strong>Subject:</strong> {$subject}\n\n<strong>Message:</strong>\n{$message}", 'debug');
             return true;
         }
-        mail($to, $subject, $message, $additional_headers);
+        return mail($to, $subject, $message, $additional_headers);
     }
 
     function sendContactform(Array $data) {
-        if (isset($data['name']) && $data['name']) {
-            $formData['name'] = $data['name'];
+
+        if (!isset($data['name']) || !$data['name']) {
+            $this->setMessage('Voer uw naam in','warning');
+            $this->redirect('contact');
         }
         
         if (!isset($data['email']) || !$data['email']  || filter_var($data['email'], FILTER_VALIDATE_EMAIL) == false) {
@@ -1089,28 +1091,26 @@ Het team van Cute Cloths By An.";
             $this->redirect('contact');
         }
 
-        if (isset($data['subject']) && $data['subject']) {
-            $formData['subject'] = $data['subject'];
-        } else {
-            $this->setMessage('Voer een vraag/ opmerking in','warning');
+        if (!isset($data['subject']) || !$data['subject']) {
+            $this->setMessage('Voer een vraag/opmerking in','warning');
             $this->redirect('contact');
         }
 
         $ToEmail = 'mees@lindeman.nu'; 
         $EmailSubject = 'CC-by-An contactformulier'; 
-        $mailheader = "From: ".$_POST['email']."\r\n"; 
-        $mailheader .= "Reply-To: ".$_POST['email']."\r\n"; 
-        $mailheader .= "Content-type: text/html; charset=iso-8859-1\r\n"; 
-        $MESSAGE_BODY = "Er is een contactformulier verzonden:\r\n 
-            Naam: {$formData['name']}\r\n 
-            Email adres: {$_POST['email']}\r\n
-            Vraag/ opmerking: {$formData['subject']}\r\n"; 
-        mail($ToEmail, $EmailSubject, $MESSAGE_BODY, $mailheader) or die ("Failure");
-        
-        if ($_POST['email']<>'') {
-            $this->setMessage('Uw formulier is verzonden', 'success');
-        } else {
+        $mailheader = "From: ".$data['email']."\r\n"; 
+        $mailheader .= "Reply-To: ".$data['email']."\r\n"; 
+        $mailheader .= "Content-type: text/html; charset=utf-8\r\n"; 
+        $MESSAGE_BODY = "Er is een contactformulier verzonden:
+Naam: {$data['name']} 
+Email adres: {$data['email']}
+Vraag/ opmerking: {$data['subject']}"; 
+        //we use a wrapper for php's mail function here, not all dev environments can send mail:
+        $result = $this->mail($ToEmail, $EmailSubject, $MESSAGE_BODY, $mailheader);
+        if (!$result) {
             $this->setMessage('Uw formulier is niet verzonden, excuus', 'error');
+        } else {
+            $this->setMessage('Uw formulier is verzonden', 'success');
         }
         $this->redirect('home');
     }
