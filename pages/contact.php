@@ -1,5 +1,5 @@
 <?php    
-if ((isset($_POST['sendform']))){
+if ($app->formIsPosted()){
     $app->sendContactform($_POST);
 }
 ?>
@@ -12,6 +12,7 @@ if ((isset($_POST['sendform']))){
 <form class="form" action="?page=contact" method="POST">
     <div class="row">
         <div class="four columns">
+            <?php echo $app->getCrfsToken() ?>
             <label for="name">Naam</label>
             <input type="text" id="name" name="name">
         </div>
@@ -24,13 +25,13 @@ if ((isset($_POST['sendform']))){
     </div>
     <div class="row">
         <div class="eight columns">
-            <label for="subject">Uw vraag/ opmerking</label>
+            <label for="subject">Uw vraag/opmerking</label>
             <textarea id="subject" name="subject" style="height:200px"></textarea>
         </div>
     </div>
     <div class="row">
         <div class="three columns">
-            <button name="sendform" value="sendform" class="button-primary" type="submit"><i class="fas fa-paper-plane"></i><span> Verstuur</span></button>
+            <button class="button-primary" type="submit"><i class="fas fa-paper-plane"></i><span> Verstuur</span></button>
         </div>
     </div>
 </form>
