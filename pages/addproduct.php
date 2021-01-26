@@ -51,10 +51,13 @@ if (isset($_REQUEST['product'])) {
 } else {
     $product = false;
 }
+
+$MAX_FILE_SIZE = min($app->get_ini_size('post_max_size'), $app->get_ini_size('upload_max_filesize'));
+
 ?>
 
 <form method="POST" action="?page=addproduct" enctype="multipart/form-data">
-    <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo min($app->get_ini_size('post_max_size'), $app->get_ini_size('upload_max_filesize'));?>" />
+    <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $MAX_FILE_SIZE?>" />
     <div class="row">
 
         <div class="four columns">
@@ -80,7 +83,7 @@ if (isset($_REQUEST['product'])) {
 
         </div>
         <div class="four columns">
-            <label for="img"><?php echo $product ? 'Vervang': 'Upload'?> foto</label>
+            <label for="img"><?php echo $product ? 'Vervang': 'Upload'?> foto <small>(max. <?php echo ini_get('upload_max_filesize')?>)</small></label>
             <input type="file" id="img" name="img">
             <?php if ($product):?>
             <img width="150" style="padding-top:10px;" src="images/products/small/<?php echo $product['id']?>.jpg?<?php echo time()?>" alt="">

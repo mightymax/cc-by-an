@@ -89,10 +89,12 @@ class WebshopApp
         $_SESSION['csrftoken'] = md5(base64_encode(random_bytes(32)));
     }
 
+    /**
+     * convert shorthand size to something we can actually do math on
+     * @see https://www.php.net/manual/en/faq.using.php#faq.using.shorthandbytes
+     */
     function get_ini_size($ini_val_key) {
         $size = ini_get($ini_val_key);
-        //see https://www.php.net/manual/en/faq.using.php#faq.using.shorthandbytes
-        // convert shorthand size to something we can actually do match on
         if (preg_match('/^([\d\.]+)([KMG])$/i', $size, $match)) {
             $pos = array_search($match[2], array("K", "M", "G"));
             if ($pos !== false) {
