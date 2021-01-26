@@ -142,10 +142,7 @@ class WebshopAppImages
                 $this->app->setMessage("System error: <code>imagecrop()</code> failed in WebshopAppImages on line ".__LINE__, 'error');
                 $this->app->redirect('addproduct');
             }
-            // "destroy" old uploaded image to replace it with the cropped image and save memory:
-            imagedestroy($image);
             $image = $image_square;
-            imagedestroy($image_square);
             $image_width =imagesx($image);
             $image_height = imagesy($image);
         }
@@ -162,10 +159,7 @@ class WebshopAppImages
                 $this->app->setMessage("System error: <code>imagecopyresampled()</code> failed in WebshopAppImages on line ".__LINE__, 'error');
                 $this->app->redirect('addproduct');
             }
-            // "destroy" old uploaded image to replace it with the resized image and save memory:
-            imagedestroy($image);
             $image = $resized_image;
-            imagedestroy($resized_image);
         }
 
         if (!$image) {
@@ -176,7 +170,7 @@ class WebshopAppImages
         return $image;
     }
 
-    public function createThumbnailFromLargeImage(GdImage $large_image)
+    public function createThumbnailFromLargeImage($large_image)
     {
         $thumbnail_image = imagecreatetruecolor($this->product_image_size_small, $this->product_image_size_small);
         if (!$thumbnail_image) {
@@ -194,7 +188,7 @@ class WebshopAppImages
         return $thumbnail_image;
     }
 
-    public function saveImage(GdImage $image, Array $product, $large_or_small)
+    public function saveImage($image, Array $product, $large_or_small)
     {
         $target_dir = ($large_or_small == 'small') ? $this->target_dirs['small'] : $this->target_dirs['large'];
         $filename = (int)$product['id'] . '.jpg';
@@ -207,6 +201,7 @@ class WebshopAppImages
             $this->app->setMessage("Systeemfout: afbeelding {$large_or_small}/{$filename} kon niet worden opgeslagen.", 'error');
             return false;
         }
+        imagedestroy($image);
         return true;
     }
 
