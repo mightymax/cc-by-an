@@ -121,6 +121,10 @@ class WebshopAppImages
     public function createCroppedAndResizedImage() {
         //load the uploaded file to a Php GD image:
         $image = imagecreatefromjpeg($this->upload['tmp_name']);
+        if (!$image) {
+            $this->app->setMessage("System error: <code>imagecreatefromjpeg()</code> failed in WebshopAppImages on line ".__LINE__, 'error');
+            $this->app->redirect('addproduct');
+        }
         $image_width =imagesx($image);
         $image_height = imagesy($image);
         // if this image is not square, crop it:
@@ -134,6 +138,10 @@ class WebshopAppImages
                 $x = intval(($image_width - $cropsize) / 2);
             }
             $image_square = imagecrop($image, ['x' => $x, 'y' => $y, 'width' => $cropsize, 'height' => $cropsize]);
+            if (!$image_square) {
+                $this->app->setMessage("System error: <code>imagecrop()</code> failed in WebshopAppImages on line ".__LINE__, 'error');
+                $this->app->redirect('addproduct');
+            }
             // "destroy" old uploaded image to replace it with the cropped image and save memory:
             imagedestroy($image);
             $image = $image_square;
@@ -145,6 +153,10 @@ class WebshopAppImages
         // at this stage we have a square image. But maybe it is not $product_image_size_large pixels?
         if ($image_width > $this->product_image_size_large) {
             $resized_image = imagecreatetruecolor($this->product_image_size_large, $this->product_image_size_large);
+            if (!$resized_image) {
+                $this->app->setMessage("System error: <code>imagecreatetruecolor()</code> failed in WebshopAppImages on line ".__LINE__, 'error');
+                $this->app->redirect('addproduct');
+            }
             imagecopyresampled($resized_image, $image, 0, 0, 0, 0, $this->product_image_size_large, $this->product_image_size_large, $image_width, $image_height);
             // "destroy" old uploaded image to replace it with the resized image and save memory:
             imagedestroy($image);
@@ -152,17 +164,33 @@ class WebshopAppImages
             imagedestroy($resized_image);
         }
 
+        if (!$image) {
+            $this->app->setMessage("System error: <code>WebshopAppImages::createCroppedAndResizedImage()</code> failed in WebshopAppImages on line ".__LINE__, 'error');
+            $this->app->redirect('addproduct');
+        }
+
         return $image;
     }
 
-    public function createThumbnailFromLargeImage($large_image)
+    public function createThumbnailFromLargeImage(GdImage $large_image)
     {
         $thumbnail_image = imagecreatetruecolor($this->product_image_size_small, $this->product_image_size_small);
-        imagecopyresampled($thumbnail_image, $large_image, 0, 0, 0, 0, $this->product_image_size_small, $this->product_image_size_small, $this->product_image_size_large, $this->product_image_size_large);
+        if (!$thumbnail_image) {
+            $this->app->setMessage("System error: <code>imagecreatetruecolor()</code> failed in WebshopAppImages on line ".__LINE__, 'error');
+            $this->app->redirect('addproduct');
+        }
+        if (imagecopyresampled($thumbnail_image, $large_image, 0, 0, 0, 0, $this->product_image_size_small, $this->product_image_size_small, $this->product_image_size_large, $this->product_image_size_large)) {
+            $this->app->setMessage("System error: <code>imagecopyresampled()</code> failed in WebshopAppImages on line ".__LINE__, 'error');
+            $this->app->redirect('addproduct');
+        }
+        if (!$thumbnail_image) {
+            $this->app->setMessage("System error: <code>WebshopAppImages::createThumbnailFromLargeImage()</code> failed in WebshopAppImages on line ".__LINE__, 'error');
+            $this->app->redirect('addproduct');
+        }
         return $thumbnail_image;
     }
 
-    public function saveImage(GdImage &$image, Array $product, $large_or_small)
+    public function saveImage(GdImage $image, Array $product, $large_or_small)
     {
         $target_dir = ($large_or_small == 'small') ? $this->target_dirs['small'] : $this->target_dirs['large'];
         $filename = (int)$product['id'] . '.jpg';
@@ -175,7 +203,6 @@ class WebshopAppImages
             $this->app->setMessage("Systeemfout: afbeelding {$large_or_small}/{$filename} kon niet worden opgeslagen.", 'error');
             return false;
         }
-        imagedestroy($image);
         return true;
     }
 
