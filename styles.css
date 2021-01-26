@@ -587,7 +587,6 @@ blockquote {
   margin: 0 auto;
 } 
 
-
 @media (min-width: 550px){
 .page-product .description {
     font-size: 20px;
@@ -610,7 +609,6 @@ div.row {
 div.row div.row, div.row:last-child {
   margin-bottom: 0px;
 }
-
 
 .order-status {
   vertical-align: middle;
@@ -642,4 +640,11 @@ div.row div.row, div.row:last-child {
 
 .order-status-verzonden {
   background-color: #3c763d;
+}
+
+img.team {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid black;
+  border-radius: 10px;
 }
