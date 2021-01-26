@@ -157,7 +157,11 @@ class WebshopAppImages
                 $this->app->setMessage("System error: <code>imagecreatetruecolor()</code> failed in WebshopAppImages on line ".__LINE__, 'error');
                 $this->app->redirect('addproduct');
             }
-            imagecopyresampled($resized_image, $image, 0, 0, 0, 0, $this->product_image_size_large, $this->product_image_size_large, $image_width, $image_height);
+            
+            if (!imagecopyresampled($resized_image, $image, 0, 0, 0, 0, $this->product_image_size_large, $this->product_image_size_large, $image_width, $image_height)) {
+                $this->app->setMessage("System error: <code>imagecopyresampled()</code> failed in WebshopAppImages on line ".__LINE__, 'error');
+                $this->app->redirect('addproduct');
+            }
             // "destroy" old uploaded image to replace it with the resized image and save memory:
             imagedestroy($image);
             $image = $resized_image;
@@ -179,7 +183,7 @@ class WebshopAppImages
             $this->app->setMessage("System error: <code>imagecreatetruecolor()</code> failed in WebshopAppImages on line ".__LINE__, 'error');
             $this->app->redirect('addproduct');
         }
-        if (imagecopyresampled($thumbnail_image, $large_image, 0, 0, 0, 0, $this->product_image_size_small, $this->product_image_size_small, $this->product_image_size_large, $this->product_image_size_large)) {
+        if (!imagecopyresampled($thumbnail_image, $large_image, 0, 0, 0, 0, $this->product_image_size_small, $this->product_image_size_small, $this->product_image_size_large, $this->product_image_size_large)) {
             $this->app->setMessage("System error: <code>imagecopyresampled()</code> failed in WebshopAppImages on line ".__LINE__, 'error');
             $this->app->redirect('addproduct');
         }
