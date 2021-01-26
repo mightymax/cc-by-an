@@ -49,7 +49,6 @@ class WebshopApp
      */
     function startSession() 
     {
-        
         session_name("cc-by-an-session-id");
         session_set_cookie_params([
             'lifetime' => 0,
@@ -62,16 +61,47 @@ class WebshopApp
         session_start();
 
         /**
+         * Since we allow file uploads, catch errors when POST is too large at very early stage in boot proccess
+         */
+        if (@$_SERVER["CONTENT_LENGTH"] > $this->get_ini_size('post_max_size')) {
+            $this->setMessage("Je probeerde iets te uploaden dat groter is dan wij kunnen toestaan (max. ".ini_get("post_max_size").")", "error");
+            $this->redirect();
+        }
+
+        /**
          * prevent CSRF attacks
          * @see https://medium.com/@steveclifton_12558/php-csrf-prevention-ad0baa2d2902
          */
         if (isset($_POST['csrftoken']) && $_POST['csrftoken'] !== @$_SESSION['csrftoken']) {
             $this->setMessage("CSRF attack detected.", 'error');
             $this->redirect();
-
         }
+
+
+        if (isset($_SESSION['redirect'])) {
+            unset($_SESSION['redirect']);
+        } elseif (isset($_SESSION['POST'])) {
+            unset($_SESSION['POST']);
+        }
+
+
         // generate a new token
         $_SESSION['csrftoken'] = md5(base64_encode(random_bytes(32)));
+    }
+
+    /**
+     * convert shorthand size to something we can actually do math on
+     * @see https://www.php.net/manual/en/faq.using.php#faq.using.shorthandbytes
+     */
+    function get_ini_size($ini_val_key) {
+        $size = ini_get($ini_val_key);
+        if (preg_match('/^([\d\.]+)([KMG])$/i', $size, $match)) {
+            $pos = array_search($match[2], array("K", "M", "G"));
+            if ($pos !== false) {
+                $size = $match[1] * pow(1024, $pos + 1);
+            }
+        }
+        return (int)$size;
     }
 
     function getCrfsToken()
@@ -203,16 +233,21 @@ class WebshopApp
         }
         $stmt = $this->conn->prepare('DELETE FROM `product` WHERE id=:id');
         $stmt->bindParam(':id', $product['id'], PDO::PARAM_INT);
-        $stmt->execute(); 
-        if ($stmt->execute()) {
+        try {
+            $stmt->execute(); 
             $this->setMessage('Product is met succes verwijderd', 'success');
-        } else {
+        } catch (Exception $e) {
             $this->setMessage('Systeem fout: product is niet opgeslagen', 'error');
         }
+        //delete images:
+        include_once __DIR__ . '/Images.php';
+        $imageTools = new WebshopAppImages($this);
+        $imageTools->deleteImage($product, 'small');
+        $imageTools->deleteImage($product, 'large');
         $this->redirect('producten');
     }
 
-    function editProduct(Array $data){
+    function editProduct(Array $data, $hasFileUpload){
 
         /* Checks if input data is valid */
     
@@ -229,7 +264,11 @@ class WebshopApp
                 $this->redirect('addproduct');
             }
             $storeData['category'] = $data['category'];
+        } else {
+            $this->setMessage('Kies een categorie', 'warning');
+            $this->redirect('addproduct');
         }
+        
         if (isset($data['price']) && intval($data['price'])){
             $storeData['price'] = $data['price'];
         } else {
@@ -246,7 +285,11 @@ class WebshopApp
                 $this->redirect('addproduct');
             }
             $sql = "UPDATE product SET name=:name, price=:price, description=:description, category=:category WHERE id=:id";
-        }   else {
+        } else {
+            if (!$hasFileUpload) {
+                $this->setMessage('Als je een nieuw product wilt aanmaken is het uploaden van een afbeelding verplicht.', 'warning');
+                $this->redirect('addproduct');
+            }
             $product = False;
             $sql = "INSERT INTO product SET name=:name, price=:price, description=:description, category=:category";
         }
@@ -260,10 +303,20 @@ class WebshopApp
         }
         if ($stmt->execute()) {
             $this->setMessage('Product is met succes opgeslagen', 'success');
+            if ($product) {
+                //reload product from our database and return it:
+                return $this->getProduct($product['id']);
+            } else {
+                //new product created, get the id of that record:
+                $product_id = (int)$this->conn->lastInsertId();
+                return $this->getProduct($product_id);
+            }
         } else {
             $this->setMessage('Systeem fout: product is niet opgeslagen', 'error');
+            return false;
         }
-        $this->redirect('addproduct');   
+        //no redirect so we can hand over to image upload class
+        // $this->redirect('addproduct');   
     }
 
     /**
@@ -335,8 +388,26 @@ class WebshopApp
      */
     function redirect($page = 'home', $extra = '') 
     {
+        //save $_POST so we can regenerate form without the user having tot retype everything
+        if ($this->formIsPosted()) {
+            $_SESSION['POST'] = $_POST;
+            if (isset($_SESSION['POST']['csrftoken'])) {
+                unset($_SESSION['POST']['csrftoken']);
+            }
+        } else {
+            if (isset($_SESSION['POST'])) {
+                unset($_SESSION['POST']);
+            }
+        }
+        //tell next request this is a redirect:
+        $_SESSION['redirect'] = true;
         header('Location: ?page=' . $page . $extra, true, 301);
         exit;
+    }
+
+    function formValue($key, $default = '') {
+        if ($default) return $default;
+        else return @$_SESSION['POST'][$key];
     }
 
     function getUsers($limit = 1000000, $offset = 0)
@@ -607,7 +678,7 @@ Het team van Cute Cloths By An.
          */
         if (!count($updateData)) {
             $this->setMessage("Uw gegevens zijn niet gewijzigd.", 'info');
-            $this->redirect('profiel');
+            $this->redirect($redirectPage);
         }
 
         /**
@@ -633,7 +704,7 @@ Het team van Cute Cloths By An.
             $this->conn->prepare($sql)->execute($updateData);
         } catch (PDOException $e) {
             $this->setMessage("Uw gegevens zijn niet opgeslagen door een technisch probleem met onze website.", 'error');
-            $this->redirect('profiel');
+            $this->redirect($redirectPage);
         }
         if ($createUserMode) {
             $this->login($updateData['email'], $data['password']);
@@ -642,7 +713,7 @@ Het team van Cute Cloths By An.
             $this->redirect();
         } else {
             $this->setMessage("Uw gewijzigde gegevens zijn opgeslagen.", 'success');
-            $this->redirect('profiel');
+            $this->redirect($redirectPage);
         }
     }
 

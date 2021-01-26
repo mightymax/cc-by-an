@@ -2,3 +2,5 @@ db-schema.mwb.bak
 .DS_Store
 vendor
 .ENV
+images/products/small/*.jpg
+images/products/large/*.jpg

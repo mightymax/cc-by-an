@@ -232,7 +232,7 @@ label i.fa-asterisk {
   font-size: 80%;
 }
 
-form .columns input, form .columns textarea {
+form .columns input, form .columns textarea, form .columns select {
   width: 100%;
   padding-right: 25px;
 }
@@ -642,9 +642,37 @@ div.row div.row, div.row:last-child {
   background-color: #3c763d;
 }
 
-img.team {
-  max-width: 100%;
-  height: auto;
-  border: 1px solid black;
-  border-radius: 10px;
+/* http://www.menucool.com/9499/CSS-loading-spinner-with-a-semi-transparent-background */
+#spinner {
+  position:fixed;
+  width:100%;
+  left:0;right:0;top:0;bottom:0;
+  background-color: rgba(255,255,255,0.7);
+  z-index:9999;
+  display:none;
+}
+
+@-webkit-keyframes spin {
+  from {-webkit-transform:rotate(0deg);}
+  to {-webkit-transform:rotate(360deg);}
+}
+
+@keyframes spin {
+  from {transform:rotate(0deg);}
+  to {transform:rotate(360deg);}
+}
+
+#spinner::after {
+  content:'';
+  display:block;
+  position:absolute;
+  left:48%;top:40%;
+  width:40px;height:40px;
+  border-style:solid;
+  border-color:black;
+  border-top-color:transparent;
+  border-width: 4px;
+  border-radius:50%;
+  -webkit-animation: spin .8s linear infinite;
+  animation: spin .8s linear infinite;
 }
