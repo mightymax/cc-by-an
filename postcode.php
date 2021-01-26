@@ -2,9 +2,9 @@
 $token = '225392d1-8384-447a-8a5b-e8e373f16f8b';
 $postcode = @$_REQUEST['postcode'];
 $number = @$_REQUEST['huisnummer'];
-$number = intval(preg_replace('/[^0-9]+/', '', $number));
+// $number = intval(preg_replace('/[^0-9]+/', '', $number));
 
-if (0 === preg_match('/^[1-9]{1}[0-9]{3}[\s]{0,1}[a-z]{2}$/i', $postcode)) {
+if (!$number || 0 === preg_match('/^[1-9]{1}[0-9]{3}[\s]{0,1}[a-z]{2}$/i', $postcode)) {
     http_response_code(500);
     return;
 }

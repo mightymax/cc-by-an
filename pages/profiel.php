@@ -84,3 +84,55 @@ if ($app->formIsPosted() && isset($_POST['profiel'])) {
         </div>
     </div>
 </form>
+<script>
+window.onload = function() {
+    // see https://www.w3schools.com/xml/xml_http.asp
+
+    //get reference to DOM form field objects postalcode and housenumber:
+    var postalcode = document.getElementById('postalcode');
+    var housenumber = document.getElementById('housenumber');
+
+    // listen for blur events (=focus removed from field)
+    // and call function loadAddress() every time this happens:
+    postalcode.addEventListener('blur', loadAddress);
+    housenumber.addEventListener('blur', loadAddress);
+
+    // callback function for blur events:
+    function loadAddress() {
+        //some very old browser do not have XMLHttpRequest, so be it ...
+        if (typeof XMLHttpRequest != 'function') {
+            return;
+        }
+        //only cal the API if bot fields have values:
+        if (postalcode.value && housenumber.value) {
+            // display the CSS spinner to indicate the page is doing something:
+            document.getElementById('spinner').style.display = 'inherit';
+
+            // initiate new asynchronous request:
+            var xhttp = new XMLHttpRequest();
+
+            // when request is ready, parse JSON API result:
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4) {
+                    if (this.status == 200) {
+                        var response = JSON.parse(this.responseText);
+                        //set value of form objects based on response from API:
+                        if (response.street) {
+                            document.getElementById('streetname').value  = response.street;
+                        }
+                        if (response.city) {
+                            document.getElementById('place').value  = response.city;
+                        }
+                    }
+                    // hide the CSS spinner
+                    document.getElementById('spinner').style.display = 'none';
+                }
+            };
+
+            // open the actual request and send it to the server:
+            xhttp.open("GET", `postcode.php?postcode=${postalcode.value}&huisnummer=${housenumber.value}`, true);
+            xhttp.send();
+        }
+    }
+}
+</script>
