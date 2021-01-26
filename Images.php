@@ -15,7 +15,7 @@ class WebshopAppImages
 
     public function __construct(WebshopApp $app, $formFieldName = 'img') {
         if (!ini_get('file_uploads')) {
-            app->setMessage("System error: file uploads not allowd by 'file_uploads' ini directive.");
+            $app->setMessage("System error: file uploads not allowd by 'file_uploads' ini directive.");
             $app->redirect();
         }
         $this->app = $app;
@@ -191,6 +191,4 @@ class WebshopAppImages
         return unlink($target_file);
 
     }
-
-    
 }
