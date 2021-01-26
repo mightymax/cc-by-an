@@ -678,7 +678,7 @@ Het team van Cute Cloths By An.
          */
         if (!count($updateData)) {
             $this->setMessage("Uw gegevens zijn niet gewijzigd.", 'info');
-            $this->redirect('profiel');
+            $this->redirect($redirectPage);
         }
 
         /**
@@ -704,7 +704,7 @@ Het team van Cute Cloths By An.
             $this->conn->prepare($sql)->execute($updateData);
         } catch (PDOException $e) {
             $this->setMessage("Uw gegevens zijn niet opgeslagen door een technisch probleem met onze website.", 'error');
-            $this->redirect('profiel');
+            $this->redirect($redirectPage);
         }
         if ($createUserMode) {
             $this->login($updateData['email'], $data['password']);
@@ -713,7 +713,7 @@ Het team van Cute Cloths By An.
             $this->redirect();
         } else {
             $this->setMessage("Uw gewijzigde gegevens zijn opgeslagen.", 'success');
-            $this->redirect('profiel');
+            $this->redirect($redirectPage);
         }
     }
 

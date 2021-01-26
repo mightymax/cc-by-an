@@ -1,6 +1,6 @@
 <?php
 //edit user from an administrator:
-if ($app->formIsPosted() && isset($_REQUEST['user'])) {
+if (isset($_REQUEST['user'])) {
     $app->gateKeeper(true);
     $user = $app->getUser($_REQUEST['user']);
     if (!$user) {

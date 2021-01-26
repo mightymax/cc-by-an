@@ -53,6 +53,7 @@
         </nav>
       </footer>
     </div>
+    <div id="spinner"></div>
 
   </body>
 </html>
