@@ -2,105 +2,104 @@
 $app->gateKeeper(True);
 $categories = $app->getCategories();
 
-if ($app->formIsPosted() && (isset($_POST['deleteproduct']))):
+
+
+if ($app->formIsPosted() && isset($_POST['deleteproduct'])):
     $app->deleteProduct($_POST);
 elseif ($app->formIsPosted()):
-    $app->editProduct($_POST);
+
+    //make instance of our Image helper class:
+    include_once __DIR__ . '/../Images.php';
+    $imageTools = new WebshopAppImages($app, 'img');
+    //try to save product. When this is a new product, check if an image is uploaded by providing an extra argument:
+    $product = $app->editProduct($_POST, $imageTools->isUploadFile());
+    if (!$product) {
+        $app->setMessage('Het is niet gelukt om het gewijzigde product op te slaan');
+        $app->redirect('addproduct');
+    } else {
+
+        if ($imageTools->isUploadFile()) {
+            
+            $imageTools->checkUploadDirectories();
+
+            // did the upload go well?
+            $imageTools->checkUploadedFile();
+
+            // is this an image? 
+            $imageTools->checkIfUploadedFileIsAnImage();
+
+            // At this stage, we know we have a valid upload that is a JPEG. 
+            // Now we will do some image manipulation using GD 
+            $large_image = $imageTools->createCroppedAndResizedImage();
+
+            //create thumbnail:
+            $small_image = $imageTools->createThumbnailFromLargeImage($large_image);
+
+            $imageTools->saveImage($large_image, $product, 'large');
+            $imageTools->saveImage($small_image, $product, 'small');
+            $app->setMessage('De gewijzigde productgegevens en afbeelding zijn opgeslagen', 'success');
+        } else {
+            $app->setMessage('De gewijzigde productgegevens zijn opgeslagen', 'success');
+        }
+        $app->redirect('addproduct', '&product=' . $product['id']);
+    }
+
 endif;
 
 if (isset($_REQUEST['product'])) {
     $product = $app->getProduct($_REQUEST['product']);
+} else {
+    $product = false;
 }
-
-function uploadImg(Array $data) {
-    $target_dir = "webtech-webshop/images/products/small";
-    $target_file = $target_dir . basename($_FILES["productimg"]['name']);
-    $uploadOk = 1;
-    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-
-    // Check if image file is an actual image
-    if (isset($_POST['submit'])) {
-        $check = getimagesize($_FILES["productimg"]["tmp_name"]);
-        if($check !== false) {
-            echo "File is an image - " . $check["mime"] . ".";
-            $uploadOk = 1;
-          } else {
-            echo "File is not an image.";
-            $uploadOk = 0;
-          }
-    }
-    //Check if file already exists
-    if (file_exists($target_file)) {
-        echo "Sorry, this file already exists.";
-        $uploadOk = 0;
-    }
-    // Check file size
-    if ($_FILES["productimg"]["size"] > 100) { 
-        echo "Sorry, your file is too large.";
-        $uploadOk = 0;
-    }
-
-    //File dimensions must by 300x300
-
-    // Allow certain file formats
-    if($imageFileType != "jpg" && $imageFileType != "jpeg") {
-        echo "Sorry, only JPG & JPEG are allowed.";
-        $uploadOk = 0;
-    } 
-    // Check if $uploadOk is set to 0 by an error
-    if ($uploadOk == 0) {
-        echo "Sorry, your file was not uploaded.";
-    // if everything is ok, try to upload file
-    } else {
-    if (move_uploaded_file($_FILES["productimg"]["tmp_name"], $target_file)) {
-      echo "The file ". htmlspecialchars( basename( $_FILES["fileToUpload"]["name"])). " has been uploaded.";
-    } else {
-      echo "Sorry, there was an error uploading your file.";
-    }
-  }  
-}
-
 ?>
 
-
-<br>
 <form method="POST" action="?page=addproduct" enctype="multipart/form-data">
+    <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo min($app->get_ini_size('post_max_size'), $app->get_ini_size('upload_max_filesize'));?>" />
     <div class="row">
+
         <div class="four columns">
             <?php echo $app->getCrfsToken() ?>
             <input type="hidden" name="id" value="<?php echo @$product['id']?>">
-            <label for="name">Product naam</label>
-            <input type="text" name="name" id="name" value="<?php echo @$product['name']?>">
+            <p>
+                <label for="name">Product naam</label>
+                <input type="text" name="name" id="name" value="<?php echo $app->formValue('name', @$product['name']) ?>">
+            </p>
+            <p>
+                <label for="price">Prijs (in centen)</label>
+                <input type="number" name="price" id="price" value="<?php echo $app->formValue('price', @$product['price']) ?>">
+            </p>
+            <p>
+                <label for="category">Categorie</label>
+                <select name="category" id="category">
+                    <option value=""> -- Kies een categorie --</option>
+                <?php foreach($categories as $category):?>  
+                    <option value="<?php echo $category['id']?>" <?php if ($category['id']==$app->formValue('category', @$product['category'])) echo 'selected="selected"' ?>><?php echo $category['name']; ?></option>
+                <?php endforeach ?>
+                </select>
+            </p>
+
         </div>
         <div class="four columns">
-            <label for="productImg">Upload foto</label>
-            <input type="file" id="productimg" name="productimg">
-        </div>
-    </div>
-    <div class="row">
-        <div class="four columns">
-            <label for="price">Prijs (in centen)</label>
-            <input type="number" name="price" id="price" value="<?php echo @$product['price']?>">
-        </div>
-        <div class="four columns">
-            <label for="category">Categorie</label>
-            <select name="category" id="category">
-            <?php foreach($categories as $category):?>  
-            <option value="<?php echo $category['id']?>" <?php if ($category['id']==@$product['category']) echo 'selected="selected"' ?>><?php echo $category['name']; ?></option>
-            <?php endforeach ?>
-            </select>
+            <label for="img"><?php echo $product ? 'Vervang': 'Upload'?> foto</label>
+            <input type="file" id="img" name="img">
+            <?php if ($product):?>
+            <img width="150" style="padding-top:10px;" src="images/products/small/<?php echo $product['id']?>.jpg?<?php echo time()?>" alt="">
+            <?php endif?>
         </div>
     </div>
     <div class="row">
         <div class="eight columns">
             <label for="description">Beschrijving</label>
-            <textarea name="description" id="description" style="height:100px"><?php echo @$product['description']?></textarea>
+            <textarea name="description" id="description" style="height:100px"><?php echo $app->formValue('description', @$product['description']) ?></textarea>
         </div>
     </div>
     <div class="row">
-        <div class="four columns">  
+        <div class="eight columns">  
             <label></label>
-            <button class="button-primary" type="submit"><i class="far fa-save"></i><span> Opslaan</span></button><?php if (isset($_REQUEST['product'])):?><button class="button-primary" type="submit" name="deleteproduct" value="deleteproduct"><i class="fas fa-trash-alt"></i><span> Verwijderen</span></button><?php endif ?> 
+            <button class="button-primary" type="submit"><i class="far fa-save"></i><span> Opslaan</span></button>
+            <?php if ($product):?>
+                &nbsp;<button type="submit" onclick="return confirm('Weet je zeker dat je dit product en de afbeelding definitief wilt verwijderen?')" name="deleteproduct" value="deleteproduct"><i class="fas fa-trash-alt"></i><span> Verwijderen</span></button>
+            <?php endif ?> 
         </div>
     </div>
 </form>
