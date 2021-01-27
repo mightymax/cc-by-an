@@ -736,8 +736,8 @@ Het team van Cute Cloths By An.
     function deleteUser($id) 
     {
         if ((int)$id == $this->getAppUser()['id']) {
-            header('Location: https://www.113.nl/', true, 301);
-            exit;
+            $this->setMessage('Huh? Je wilt toch zeker niet jezelf verwijderen?', 'warning');
+            $this->redirect('users', '#user-' . $id);
         }
         $stmt = $this->conn->prepare("DELETE FROM client WHERE id=:id"); 
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
