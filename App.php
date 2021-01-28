@@ -735,7 +735,7 @@ Met vriendelijke groet,
 
 Het team van Cute Cloths By An.
         ";
-            $this->mail($user['email'], 'Bevestig uw e-mailadres', $message, 'From: cc-by-an@lindeman.nu');
+            $this->mail($updateData['email'], 'Bevestig uw e-mailadres', $message, 'From: cc-by-an@lindeman.nu');
             $this->redirect();
         } else {
             $this->setMessage("Uw gewijzigde gegevens zijn opgeslagen.", 'success');
