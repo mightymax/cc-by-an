@@ -9,21 +9,15 @@
     <p>Door de informatie en de diensten op onze website te gebruiken, gaat u akkoord met onze privacy
         policy en de voorwaarden die wij hierin hebben opgenomen.</p>
     <h4>Monitoren gedrag bezoeker</h4>
-    <p>Onze webshop maakt gebruik van verschillende technieken om bij te houden wie de website
-        bezoekt, hoe deze bezoeker zich op de website gedraagt en welke pagina’s worden bezocht. Dat
-        is een gebruikelijke manier van werken voor websites omdat het informatie oplevert op die
-        bijdraagt aan de kwaliteit van de gebruikerservaring. De informatie die we, via cookies, registreren,
-        bestaat uit onder meer IP-adressen, het type browser en de bezochte pagina’s.
-        Tevens monitoren we waar bezoekers de website voor het eerst bezoeken en vanaf welke pagina
-        ze vertrekken. Deze informatie houden we anoniem bij en is niet gekoppeld aan andere
-        persoonlijke informatie, informatie die op websites.</p>
+    <p>Wij verkopen onze producten, niet uw informatie! 
+    Wij houden op geen enkele manier bij hoe vaak u onze website bezoekt, ook monitoren wij uw verdere gedrag op onze website niet 
+    en delen wij dit dus ook niet met derden. 
+    Uiteraard zorgen wij wel dat uw bestellingen goed bij ons aankomen en uiteindelijk bij u bezorgd worden.</p>
     <h4>Gebruik van cookies</h4>
-    <p>Wij plaatsen cookies bij bezoekers. Dat doen we om informatie te verzamelen over de
-        pagina’s die gebruikers op onze website bezoeken, om bij te houden hoe vaak bezoekers terug
-        komen en om te zien welke pagina’s het goed doen op de website. Ook houden we bij welke
-        informatie de browser deelt.</p>
+    <p>Wij plaatsen alleen functionele cookies bij bezoekers, dus geen zgn. "<em>tracking cookies</em>". Dat doen we uitsluitend om de functionaliteit van onze website (inloggen en bestellen) 
+    technisch mogelijk te maken. Wij plaatsen <strong>geen</strong> analytische cookies.</p>
     <h4>Cookies uitschakelen</h4>
     <p>U kunt er voor kiezen om cookies uit te schakelen. Dat doet u door gebruik te maken de
         mogelijkheden van uw browser. U vindt meer informatie over deze mogelijkheden op de website
-        van de aanbieder van uw browser.</p>
+        van de aanbieder van uw browser. Als u cookies uitzet, kunt u niet inloggen en/of producten bestellen.</p>
 </article>
