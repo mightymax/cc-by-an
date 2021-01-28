@@ -962,11 +962,11 @@ Het team van Cute Cloths By An.
             return $this->mollie();
         }
 
-        $this->setMessage("Bedankt voor uw bestelling. Wij sturen uw een e-mail met verdere instructies.", 'success');
+        $this->setMessage("Bedankt voor uw bestelling. Wij sturen u een e-mail met verdere instructies.", 'success');
         if (!$mailresult) {
             $this->setMessage("Bedankt voor uw bestelling. Het is helaas niet gelukt om een e-mail te sturen, wij nemen z.s.m. contact met u op.", 'warning');
         } else {
-            $this->setMessage("Bedankt voor uw bestelling. Wij sturen uw een e-mail met verdere instructies.", 'success');
+            $this->setMessage("Bedankt voor uw bestelling. Wij sturen u een e-mail met verdere instructies.", 'success');
         }
         unset($_SESSION['shoppingcart']);
         $this->redirect();
