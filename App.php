@@ -734,7 +734,7 @@ bevestigen. Klik daarvoor op deze link:
 Met vriendelijke groet,
 
 Het team van Cute Cloths By An.
-        ";
+        ";  
             $this->mail($updateData['email'], 'Bevestig uw e-mailadres', $message, 'From: cc-by-an@lindeman.nu');
             $this->redirect();
         } else {
