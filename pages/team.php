@@ -42,6 +42,12 @@
         <div class="seven columns">
             <h5>Lieuwe van Weert</h5>
             <p>
+            Hoi.
+            Ik ben Lieuwe van Weert. 
+            Ik heb voor mijn studie KI deze website samen met Jop, Sam en Mees gemaakt. 
+            Naast websites bouwen doe ik aan voetbal en zeilen. 
+            Ik vind het belangrijk dat de website makkelijk te gebruiken is en toegankelijk voor iedereen. 
+            Ik hoop dat u geniet van de website!
             </p>
         </div>
     </div>
