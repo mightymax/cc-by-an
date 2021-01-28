@@ -2,6 +2,7 @@
 if ($app->formIsPosted()){
     $app->sendContactform($_POST);
 }
+$user = $app->getAppUser();
 ?>
 
 <h2>Klantenservice en contact</h2>
@@ -14,13 +15,13 @@ if ($app->formIsPosted()){
         <div class="four columns">
             <?php echo $app->getCrfsToken() ?>
             <label for="name">Naam</label>
-            <input type="text" id="name" name="name" required>
+            <input type="text" id="name" name="name" required <?php if ($user) echo "value=\"{$user['name']}\""; ?>>
         </div>
     </div>
     <div class="row">
         <div class="four columns">
             <label for="email">Emailadres</label>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" name="email" required <?php if ($user) echo "value=\"{$user['email']}\""; ?>>
         </div>
     </div>
     <div class="row">
