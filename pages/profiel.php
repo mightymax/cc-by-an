@@ -25,7 +25,11 @@ if ($app->formIsPosted() && isset($_POST['profiel'])) {
     }
 }
 ?>
+<?php if ($user['isNew']) : ?>
+<h2>Maak een profiel aan</h2>
+<?php else:?>
 <h2>Pas hier uw profiel aan</h2>
+<?php endif ?>
 <form class="form" action="?page=profiel" method="POST">
     <div class="row">
         <div class="four columns">
@@ -33,46 +37,52 @@ if ($app->formIsPosted() && isset($_POST['profiel'])) {
             <input type="hidden" name="id" value="<?php echo @$_REQUEST['user']?>">
             <input type="hidden" name="profiel" value="1">
             <label for="naam">Naam <i class="fas fa-asterisk"></i></label>
-            <input type="text" name="name" id="name" required value="<?php echo $user['name']?>">
+            <input type="text" name="name" id="name" required value="<?php echo $app->formValue('name', $user['name']) ?>" placeholder="Vul uw naam in …">
         </div>
         <div class="four columns">
-            <label for="email">Emailadres <i class="fas fa-asterisk"></i></label>
-            <input type="email" name="email" id="email" required value="<?php echo $user['email']?>">
+            <label for="email">E-mailadres <i class="fas fa-asterisk"></i></label>
+            <input type="email" name="email" id="email" required value="<?php echo $app->formValue('email', $user['email'])?>" placeholder="Vul uw E-mailadres in … ">
         </div>
     </div>
     <div class="row">
         <div class="two columns">
             <label for="postalcode">Postcode <i class="fas fa-asterisk"></i></label>
-            <input type="text" name="postalcode" id="postalcode" value="<?php echo $user['postalcode']?>">
+            <input type="text" name="postalcode" id="postalcode" value="<?php echo $app->formValue('postalcode', $user['postalcode'])?>" placeholder="Uw postcode in … ">
         </div>
         <div class="two columns">
             <label for="housenumber">Huisnummer <i class="fas fa-asterisk"></i></label>
-            <input type="text" name="housenumber" id="housenumber" required value="<?php echo $user['housenumber']?>">
+            <input type="text" name="housenumber" id="housenumber" required value="<?php echo $app->formValue('housenumber', $user['housenumber'])?>" placeholder="huisnr. + toev. … ">
         </div>
         <div class="four columns">
             <label for="streetname">Straat <i class="fas fa-asterisk"></i></label>
-            <input type="text" name="streetname" id="streetname" required value="<?php echo $user['streetname']?>">
+            <input type="text" name="streetname" id="streetname" required value="<?php echo $app->formValue('streetname', $user['streetname'])?>" placeholder="Uw straat … ">
         </div>
     </div>
     <div class="row">
         <div class="four columns">
             <label for="place">Plaatsnaam <i class="fas fa-asterisk"></i></label>
-            <input type="text" name="place" id="place" required value="<?php echo $user['place']?>">
+            <input type="text" name="place" id="place" required value="<?php echo $app->formValue('place', $user['place'])?>" placeholder="Vul uw Woonplaats in … ">
         </div>
         <div class="four columns">
             <label for="phone">Telefoon</label>
-            <input type="text" name="phone" id="phone" value="<?php echo $user['phone']?>" maxlength="10">
+            <input type="text" name="phone" id="phone" value="<?php echo $app->formValue('phone', $user['phone'])?>" maxlength="10" placeholder="Vul eventueel uw telefoonnummer in … ">
         </div>
     </div>
     <div class="row">
         <div class="two columns">
             <label for="password">Wachtwoord <?php if ($user['isNew']):?> <i class="fas fa-asterisk"></i><?php endif?></label>
-            <input type="password" name="password" id="password" <?php if ($user['isNew']) echo 'required'; ?>>
+            <input type="password" name="password" id="password" <?php if ($user['isNew']) echo 'required'; ?> placeholder="••••••••">
         </div>
         <div class="two columns">
             <label for="password2"> (controle)</label>
-            <input type="password" name="password2" id="password2" <?php if ($user['isNew']) echo 'required'; ?>>
+            <input type="password" name="password2" id="password2" <?php if ($user['isNew']) echo 'required'; ?> placeholder="••••••••">
         </div>
+        <?php if (!$user['isNew']) :?>
+        <div class="six columns">
+            <label>&nbsp;</label>
+            <small>(alleen invullen als u uw wachtwoord wilt aanpassen)</small>
+        </div>
+        <?php endif?>
     </div>
     <div class="row">
         <div class="three columns">
