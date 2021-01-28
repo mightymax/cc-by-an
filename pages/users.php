@@ -38,7 +38,7 @@ $users = $app->getUsers();
         <td><?php echo $user['place']?></td>
         <td>
             <a href="?page=users&amp;toggleAdmin=<?php echo $user['id']?>" title="Geef/Ontneem deze gebruiker beheerdersrechten">
-                <i class="fas fa-user<?php echo $user['isadmin'] == 'Y' ? '-cog':'';?>"></i>
+                <i class="<?php if (0===strpos($user['token'], 'ccba-')) echo 'unconfirmed'?> fas fa-user<?php echo $user['isadmin'] == 'Y' ? '-cog':'';?>"></i>
             </a>
         </td>
         <td>

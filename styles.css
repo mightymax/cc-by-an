@@ -683,3 +683,7 @@ img.team {
   border: 1px solid black;
   border-radius: 10px;
 }
+
+.unconfirmed {
+  color:#ff9933;
+}
