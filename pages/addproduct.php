@@ -65,15 +65,15 @@ $MAX_FILE_SIZE = min($app->get_ini_size('post_max_size'), $app->get_ini_size('up
             <input type="hidden" name="id" value="<?php echo @$product['id']?>">
             <p>
                 <label for="name">Product naam</label>
-                <input type="text" name="name" id="name" value="<?php echo $app->formValue('name', @$product['name']) ?>">
+                <input type="text" name="name" id="name" required value="<?php echo $app->formValue('name', @$product['name']) ?>" placeholder="Naam van het product">
             </p>
             <p>
                 <label for="price">Prijs (in centen)</label>
-                <input type="number" name="price" id="price" value="<?php echo $app->formValue('price', @$product['price']) ?>">
+                <input type="number" name="price" id="price" required value="<?php echo $app->formValue('price', @$product['price']) ?>" placeholder="Prijs in centen: €10 => 1000">
             </p>
             <p>
                 <label for="category">Categorie</label>
-                <select name="category" id="category">
+                <select name="category" id="category" required >
                     <option value=""> -- Kies een categorie --</option>
                 <?php foreach($categories as $category):?>  
                     <option value="<?php echo $category['id']?>" <?php if ($category['id']==$app->formValue('category', @$product['category'])) echo 'selected="selected"' ?>><?php echo $category['name']; ?></option>
@@ -93,7 +93,7 @@ $MAX_FILE_SIZE = min($app->get_ini_size('post_max_size'), $app->get_ini_size('up
     <div class="row">
         <div class="eight columns">
             <label for="description">Beschrijving</label>
-            <textarea name="description" id="description" style="height:100px"><?php echo $app->formValue('description', @$product['description']) ?></textarea>
+            <textarea name="description" id="description" style="height:100px" placeholder="Voer een beschrijving van het artikel in ..." required ><?php echo $app->formValue('description', @$product['description']) ?></textarea>
         </div>
     </div>
     <div class="row">

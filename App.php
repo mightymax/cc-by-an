@@ -681,6 +681,11 @@ Het team van Cute Cloths By An.
             $this->redirect($redirectPage);
         }
 
+        if ($createUserMode) {
+            // create token for user to confirm e-mailadress:
+            $updateData['token'] = 'ccba-' . bin2hex(openssl_random_pseudo_bytes(16));
+        }
+
         /**
          * Loop thru all fields that needs to be updated and construct an SQL statement, eg.
          * UPDATE CLIENT SET name=:name, phone=:phone WHERE id:id
@@ -707,9 +712,30 @@ Het team van Cute Cloths By An.
             $this->redirect($redirectPage);
         }
         if ($createUserMode) {
-            $this->login($updateData['email'], $data['password']);
+            // $this->login($updateData['email'], $data['password']);
             $this->clearMessage('success');
-            $this->setMessage("Uw profiel is aangemaakt en u bent automatisch ingelogd.", 'success');
+            // $this->setMessage("Uw profiel is aangemaakt en u bent automatisch ingelogd.", 'success');
+            $this->setMessage("Uw profiel is aangemaakt. Voordat u kunt inloggen moet u uw e-mailadres aan ons bevestigen. Houd uw e-mail in de gaten voor verdere instructies.", 'success');
+            $protocol = isset($_SERVER['HTTPS']) && strcasecmp('off', $_SERVER['HTTPS']) !== 0 ? "https" : "http";
+            $hostname = $_SERVER['HTTP_HOST'];
+            $path = dirname(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']);
+    
+            $resetUrl = "{$protocol}://{$hostname}{$path}/index.php?page=confirmemailadress&token={$updateData['token']}";
+
+            $message = "Beste {$updateData['name']},
+
+Iemand heeft met uw e-mailadres een profiel aangemaakt op onze webshop. 
+Als u dat niet zelf heeft gedaan, kunt u dit bericht negeren.
+
+Heeft u inderdaad een nieuw profiel aangevraagd, dan willen wij graag uw e-mailadres
+bevestigen. Klik daarvoor op deze link:
+{$resetUrl}
+
+Met vriendelijke groet,
+
+Het team van Cute Cloths By An.
+        ";
+            $this->mail($user['email'], 'Bevestig uw e-mailadres', $message, 'From: cc-by-an@lindeman.nu');
             $this->redirect();
         } else {
             $this->setMessage("Uw gewijzigde gegevens zijn opgeslagen.", 'success');
@@ -759,7 +785,7 @@ Het team van Cute Cloths By An.
      */
     function login($email, $password) {
 
-        $stmt = $this->conn->prepare("SELECT id, name, password FROM client WHERE email=:email"); 
+        $stmt = $this->conn->prepare("SELECT id, name, password, token FROM client WHERE email=:email"); 
         $stmt->bindParam(':email', $email);
         $stmt->execute(); 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -770,6 +796,12 @@ Het team van Cute Cloths By An.
 
         if (!password_verify($password, $user['password'])) {
             $this->setMessage("De combinatie van het door u opgegeven emailadres en wachtwoord komt niet voor in ons systeem. Controleer dit, of maak een nieuw account aan.", 'warning');
+            return false;
+        }
+
+        //e-mailaddress is not yet confirmed:
+        if (0 === strpos($user['token'], 'ccba-')) {
+            $this->setMessage("Uw e-mailadres is nog niet bevestigd. Kijk uw e-mail na voor een link om dit te doen.", 'warning');
             return false;
         }
 
@@ -1036,7 +1068,12 @@ Het team van Cute Cloths By An.
         $sql .= " GROUP BY `order`.id";
         $sql .= " ORDER BY `date` DESC";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(); 
+        try {
+            $stmt->execute();
+        } catch (Exception $e) {
+            $this->setMessage('Er is iets misgegegaan bij het ophalen van orders. Probeer het later nogmaals.', 'error');
+            $this->redirect();
+        }
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -1044,7 +1081,12 @@ Het team van Cute Cloths By An.
     {
         $stmt = $this->conn->prepare("SELECT * FROM `order` WHERE id=:id"); 
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute(); 
+        try {
+            $stmt->execute();
+        } catch (Exception $e) {
+            $this->setMessage('Er is iets misgegegaan bij het opphalen van de order. Probeer het later nogmaals.', 'error');
+            $this->redirect();
+        }
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
@@ -1058,7 +1100,12 @@ Het team van Cute Cloths By An.
 
         $stmt = $this->conn->prepare('SELECT order_line.*, product.name, product.price AS current_price FROM order_line LEFT JOIN product ON product.id=order_line.product WHERE `order`=:order');
         $stmt->bindParam(':order', $order['id'], PDO::PARAM_INT);
-        $stmt->execute(); 
+        try {
+            $stmt->execute();
+        } catch (Exception $e) {
+            $this->setMessage('Er is iets misgegegaan bij het ophalen van uw order. Probeer het later nogmaals.', 'error');
+            $this->redirect();
+        }
         $order_lines = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return [
@@ -1084,7 +1131,12 @@ Het team van Cute Cloths By An.
                 $stmt = $this->conn->prepare('UPDATE `order` SET status=:status WHERE id=:id');
                 $stmt->bindParam(':id', $order['id'], PDO::PARAM_INT);
                 $stmt->bindParam(':status', $newStatus);
-                $stmt->execute(); 
+                try {
+                    $stmt->execute();
+                } catch (Exception $e) {
+                    $this->setMessage('Er is iets misgegegaan bij het aanpassen van de orderstatus. Probeer het later nogmaals.', 'error');
+                    $this->redirect();
+                }
                 $user = $this->getUser($order['client']);
                 $message = "Beste {$user['name']},
 
@@ -1113,7 +1165,12 @@ Het team van Cute Cloths By An.";
         }
         $stmt = $this->conn->prepare('DELETE FROM `order` WHERE id=:id');
         $stmt->bindParam(':id', $order['id'], PDO::PARAM_INT);
-        $stmt->execute(); 
+        try {
+            $stmt->execute();
+        } catch (Exception $e) {
+            $this->setMessage('Er is iets misgegegaan bij het verwijderen van de order. Probeer het later nogmaals.', 'error');
+            $this->redirect();
+        }
         $this->setMessage("Order is definitief verwijderd.", 'success');
         $this->redirect('orders');
     }
