@@ -661,6 +661,11 @@ Het team van Cute Cloths By An.
                 $this->setMessage('Wachtwoord en controle wachtwoord komen niet overeen', 'warning');
                 $this->redirect('profiel');
             }
+            if (strlen($data['password']) < 8 || !preg_match("#[0-9]+#", $data['password']) || !preg_match("#[a-zA-Z]+#", $data['password'])) {
+                $this->setMessage('Uw wachtwoord moet ten minste 8 karakters bevatten waarvan minstens 1 cijfer en 1 letter', 'warning');
+                $this->redirect('profiel');
+            }     
+            
             $updateData['password'] = password_hash($data['password'],  PASSWORD_DEFAULT);
         }
 

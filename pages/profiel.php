@@ -71,11 +71,11 @@ if ($app->formIsPosted() && isset($_POST['profiel'])) {
     <div class="row">
         <div class="two columns">
             <label for="password">Wachtwoord <?php if ($user['isNew']):?> <i class="fas fa-asterisk"></i><?php endif?></label>
-            <input type="password" name="password" id="password" <?php if ($user['isNew']) echo 'required'; ?> placeholder="••••••••">
+            <input type="password" name="password" id="password" <?php if ($user['isNew']) echo 'required'; ?> >
         </div>
         <div class="two columns">
             <label for="password2"> (controle)</label>
-            <input type="password" name="password2" id="password2" <?php if ($user['isNew']) echo 'required'; ?> placeholder="••••••••">
+            <input type="password" name="password2" id="password2" <?php if ($user['isNew']) echo 'required'; ?>>
         </div>
         <?php if (!$user['isNew']) :?>
         <div class="six columns">
@@ -84,6 +84,12 @@ if ($app->formIsPosted() && isset($_POST['profiel'])) {
         </div>
         <?php endif?>
     </div>
+    <div class="row no-margin">
+        <div class="twelve columns">
+                <small>Uw wachtwoord moet tenminste 8 tekens bevatten waarvan ten minste 1 cijfer en 1 letter.</small>
+        </div>
+    </div>
+
     <div class="row">
         <div class="three columns">
             <button type="submit" class="button-primary"><i class="far fa-save"></i>  Opslaan</button>
