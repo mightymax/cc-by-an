@@ -4,3 +4,5 @@ vendor
 .ENV
 images/products/small/*.jpg
 images/products/large/*.jpg
+composer.json
+mollie
