@@ -222,6 +222,9 @@ class WebshopApp
         return $product;
     }
 
+    /**
+     * Deletes product from database
+     */
     function deleteProduct(Array $data)
     {
         if (isset($data['id']) && intval($data['id'])) {
@@ -247,6 +250,9 @@ class WebshopApp
         $this->redirect('producten');
     }
 
+    /**
+     * Able to edit products within our database
+     */
     function editProduct(Array $data, $hasFileUpload){
 
         /* Checks if input data is valid */
@@ -410,6 +416,9 @@ class WebshopApp
         else return @$_SESSION['POST'][$key];
     }
 
+    /**
+     * Retrieves users from database
+     */
     function getUsers($limit = 1000000, $offset = 0)
     {
         $stmt = $this->conn->prepare('SELECT * FROM client ORDER BY `name` LIMIT :offset, :limit');
@@ -485,6 +494,9 @@ class WebshopApp
     
     }
 
+    /**
+     * This enables our users to reset their password
+     */
     function userForgotPassword ($email) {
         if (!$email  || filter_var($email, FILTER_VALIDATE_EMAIL) == false) {
             $this->setMessage('Een geldig emailadres is verplicht', 'warning');
@@ -764,6 +776,9 @@ Het team van Cute Cloths By An.
         }
     }
 
+    /**
+     * This function enables admins to delete users
+     */
     function deleteUser($id) 
     {
         if ((int)$id == $this->getAppUser()['id']) {
@@ -855,6 +870,10 @@ Het team van Cute Cloths By An.
         $this->redirect($page, '#');
     }
 
+    /**
+     * All functions below make for optional functioning of the shopping cart.
+     * Names are logically given and functions are short so no more commentary is needed.
+     */
     function getShoppingCart() {
         return $_SESSION['shoppingcart'];
     }
@@ -983,6 +1002,9 @@ Het team van Cute Cloths By An.
         }, 0);
     }
 
+    /**
+     * This following functions below enable admins to retrieve orders from the database.
+     */
     function getOrders($status = null) {
         // de tabelnaam "order" is wat ongelukkig gekozen, dat is een reserved term in SQL
         // we moeten daarom overal in de query waar we de tabelnaam gebruiken `order` gebruiken (dus tussen "backticks")
@@ -1046,6 +1068,9 @@ Het team van Cute Cloths By An.
         ];
     }
 
+    /**
+     * This function enables admins to set order status.
+     */
     function setOrderStatus(Array $order, $newStatus) 
     {
         $order = $this->getOrder($order['id']);
@@ -1087,6 +1112,9 @@ Het team van Cute Cloths By An.";
     
     }
 
+    /**
+     * This function enables admins to delete orders.
+     */
     function deleteOrder($id) 
     {
         $order = $this->getOrder($id);
@@ -1138,6 +1166,9 @@ Het team van Cute Cloths By An.";
         return mail($to, $subject, $message, $additional_headers);
     }
 
+    /**
+     * This function is used to send a contact form to the owner of the webshop.
+     */
     function sendContactform(Array $data) {
 
         if (!isset($data['name']) || !$data['name']) {

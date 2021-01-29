@@ -8,8 +8,7 @@
     <p>
         Nadat je een bestelling hebt geplaatst, ontvang je een email met een bevestiging. 
         In dit bericht staat een bestelnummer, een overzicht van de producten die zijn besteld, 
-        de eventuele verzendkosten en het totaalbedrag van je bestelling. 
-        <!-- Je kunt je bestelling betalen via IDeal. -->
+        de eventuele verzendkosten en het totaalbedrag van je bestelling.
     </p>
 </article>
 <article>

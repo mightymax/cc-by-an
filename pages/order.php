@@ -101,4 +101,3 @@ if ($app->formIsPosted()) {
     <?php endforeach ?>
   </tbody>
 </table>
-
