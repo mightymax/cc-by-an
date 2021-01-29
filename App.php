@@ -69,7 +69,7 @@ class WebshopApp
         }
 
         /**
-         * prevent CSRF attacks
+         * prevent CSRF attacks to prevent unauthorized use of our forms
          * @see https://medium.com/@steveclifton_12558/php-csrf-prevention-ad0baa2d2902
          */
         if (isset($_POST['csrftoken']) && $_POST['csrftoken'] !== @$_SESSION['csrftoken']) {
@@ -104,11 +104,20 @@ class WebshopApp
         return (int)$size;
     }
 
+    /**
+     * Method that returns a HTML input string to include in HTML forms
+     */
     function getCrfsToken()
     {
         return '<input type="hidden" name="csrftoken" value="'. $_SESSION['csrftoken'] .'">';
     }
 
+    /**
+     * Uses the session CSRF token to check if a websites user POST-ed a form.
+     * This way we can simply check for post forms without using the Php super global $_POST
+     * 
+     * @return boolean
+     */
     function formIsPosted() 
     {
         return isset($_SESSION['csrftoken']) && isset($_POST['csrftoken']);
@@ -212,6 +221,9 @@ class WebshopApp
 
     /**
      * Gets product to show single product page 
+     * 
+     * @see self::getCategory()
+     * @return Array $product
      */
     function getProduct($id)
    {    
@@ -223,7 +235,8 @@ class WebshopApp
     }
 
     /**
-     * Deletes product from database
+     * Deletes product from database and reoves uploaded images from disk
+     * Redirects after finishing
      */
     function deleteProduct(Array $data)
     {
@@ -252,6 +265,8 @@ class WebshopApp
 
     /**
      * Able to edit products within our database
+     * Returns true or false based on success of this function
+     * After this function is done, it hands over to Image upload process
      */
     function editProduct(Array $data, $hasFileUpload){
 
@@ -321,8 +336,6 @@ class WebshopApp
             $this->setMessage('Systeem fout: product is niet opgeslagen', 'error');
             return false;
         }
-        //no redirect so we can hand over to image upload class
-        // $this->redirect('addproduct');   
     }
 
     /**
@@ -350,6 +363,9 @@ class WebshopApp
         $_SESSION["message-{$category}"] = $msg;
     }
 
+    /**
+     * Clears a message
+     */
     function clearMessage($category = 'info')
     {
         unset($_SESSION["message-{$category}"]);
@@ -411,6 +427,11 @@ class WebshopApp
         exit;
     }
 
+    /**
+     * If a user enters data in a form and submits, the user is redirected.
+     * If we want to make it more easy for our users, and not have them having to re-enter everything,
+     * use this function in the ..value="..." attribute in the HTML <input> field
+     */
     function formValue($key, $default = '') {
         if ($default) return $default;
         else return @$_SESSION['POST'][$key];
@@ -418,6 +439,8 @@ class WebshopApp
 
     /**
      * Retrieves users from database
+     * Limit and offset currently not in use, we do not expect to many users.
+     * 
      */
     function getUsers($limit = 1000000, $offset = 0)
     {
@@ -476,6 +499,9 @@ class WebshopApp
         return $user;
     }
 
+    /**
+     * This returns an empty user, we can use as a template in our "profiel.php" page
+     */
     function getEmptyUser()
     {
         return [
@@ -495,7 +521,9 @@ class WebshopApp
     }
 
     /**
-     * This enables our users to reset their password
+     * This enables our users to reset their password, it sends a resestlink to the user.
+     * A token is set in the database row of this user. This user is used to authorize
+     * the user when he/she clicks the link
      */
     function userForgotPassword ($email) {
         if (!$email  || filter_var($email, FILTER_VALIDATE_EMAIL) == false) {
@@ -736,6 +764,10 @@ Het team van Cute Cloths By An.
             $protocol = isset($_SERVER['HTTPS']) && strcasecmp('off', $_SERVER['HTTPS']) !== 0 ? "https" : "http";
             $hostname = $_SERVER['HTTP_HOST'];
             $path = dirname(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']);
+
+            /**
+             * Send an email to the new user to let them confirm their e-mailadress
+             */
     
             $resetUrl = "{$protocol}://{$hostname}{$path}/index.php?page=confirmemailadress&token={$updateData['token']}";
 
@@ -760,6 +792,10 @@ Het team van Cute Cloths By An.
         }
     }
 
+    /**
+     * Function that that sets the 'isadmin' flag in our database.
+     * Used in the manage users profile, the current Admin user can not unset his/her own admin rights
+     */
     function toggleUserAdmin($id) 
     {
         if ((int)$id == $this->getAppUser()['id']) {
@@ -777,7 +813,7 @@ Het team van Cute Cloths By An.
     }
 
     /**
-     * This function enables admins to delete users
+     * This function enables admins to delete users, it prevents users from removing themselfs
      */
     function deleteUser($id) 
     {
@@ -845,15 +881,12 @@ Het team van Cute Cloths By An.
         $this->redirect();
     }
 
+    /**
+     * Adds a product ID to the Session which functiions as our shoppingcart.
+     * If a product is already in the cart, the ammount of ordered items is updated with +1
+     */
     function inShoppingCart($product_id, $page = 'producten')
     {
-        /*
-        $user = $this->getAppUser();
-        if (!$user) {
-            $this->setMessage("U moet eerst <a href='?page=inloggen'>Aanmelden</a> voordat u bij ons kunt bestellen", 'info');
-            $this->redirect($page, '#');
-        }
-        */
         $product = $this->getProduct($product_id);
         if (!$product) {
             $this->setMessage("Product niet gevonden", 'error');
@@ -873,6 +906,7 @@ Het team van Cute Cloths By An.
     /**
      * All functions below make for optional functioning of the shopping cart.
      * Names are logically given and functions are short so no more commentary is needed.
+     * All function interact with the Php superglobal $_SESSION
      */
     function getShoppingCart() {
         return $_SESSION['shoppingcart'];
@@ -902,6 +936,10 @@ Het team van Cute Cloths By An.
         $this->redirect('winkelwagen');
     }
 
+    /**
+     * Final step in our orderpocess, all orderlines from the sesssion are stored in the database.
+     * The client gets an email with instructions.
+     */
     function checkoutShoppingCart()
     {
         $user = $this->getAppUser();
@@ -1069,7 +1107,7 @@ Het team van Cute Cloths By An.
     }
 
     /**
-     * This function enables admins to set order status.
+     * This function enables admins to set order status. The client is informed by e-mail from this status changed.
      */
     function setOrderStatus(Array $order, $newStatus) 
     {
@@ -1139,6 +1177,12 @@ Het team van Cute Cloths By An.";
         return ['nieuw', 'betaald', 'verzonden', 'geannuleerd'];
     }
 
+    /**
+     * Simple config using a hidden file ".ENV" that uses key=value syntax (ini)
+     * The function returns the value frrom .ENV or null.
+     * It uses a Signleton pattern so we can call it multiple times (for future use)
+     * but not needing to load .ENV from disk each time.
+     */
     function config($key = null)
     {
         static $config;
@@ -1156,6 +1200,11 @@ Het team van Cute Cloths By An.";
         }
     }
 
+    /**
+     * Wrapper around php mail() function, we need it for some development environments that can not send mail from Php/Webserver
+     * Set "sendmail=false" in .ENV to disable mail. If mail is disabled, the e-mail is printed to the browser for debugging
+     * 
+     */
     function mail($to, $subject, $message, $additional_headers) 
     {
         $sendmail = $this->config('sendmail');

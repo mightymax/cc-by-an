@@ -1,4 +1,9 @@
 <?php
+/**
+ * Helper class that handles Image uploads in productmanagement page
+ * Php GD is required to scale images and crop them square.
+ * Also make sure your images//productslarge and images/products/small ar writeable!
+ */
 
 class WebshopAppImages 
 {
@@ -13,7 +18,12 @@ class WebshopAppImages
         'small' => __DIR__ . '/images/products/small/'
     ];
 
+    /**
+     * Constructor of this class. It injects our main webshop object instance.
+     * The second argiment indicates the name of the upload element ($_FILES['...'])
+     */
     public function __construct(WebshopApp $app, $formFieldName = 'img') {
+        // check if server allows file_uploads
         if (!ini_get('file_uploads')) {
             $app->setMessage("System error: file uploads not allowd by 'file_uploads' ini directive.");
             $app->redirect();
@@ -44,6 +54,9 @@ class WebshopAppImages
         return false;
     }
 
+    /**
+     * Super strict checking of the uploaded file to prevent script-kiddies uploading unwanted files
+     */
     public function checkUploadedFile() {
         //is this upload an error?
         if ((int)$this->upload['error'] !== 0) {
@@ -67,6 +80,9 @@ class WebshopAppImages
         return true;
     }
 
+    /**
+     * We only want the use to upload JPEG images, we use different techniques to make sure it is
+     */
     public function checkIfUploadedFileIsAnImage()
     {
         // We use the Php function getimagesize(), since it returns false if the argument is not an image.
@@ -74,6 +90,7 @@ class WebshopAppImages
         $size = @getimagesize($this->upload["tmp_name"]);
 
         // check the mime type, we can not trust the mime value from getimagesize()
+        // we can also not trust the value from $_FILES[...][type]
         $finfo = new finfo(FILEINFO_MIME_TYPE);
         $mime = $finfo->file($this->upload['tmp_name']);
 
@@ -84,6 +101,7 @@ class WebshopAppImages
         
         $width = $size[0];
         $height = $size[1];
+        // for quality, we do not allow uploads that are smaller than our large product image
         if ($width < $this->product_image_size_large || $height < $this->product_image_size_large) {
             $app->setMessage("De productafbeelding moet ten minste {$this->product_image_size_large}x{$this->product_image_size_large}px groot zijn.", 'warning');
             $app->redirect('addproduct');
@@ -93,6 +111,9 @@ class WebshopAppImages
         $this->height = $height;
     }
 
+    /**
+     * Verify that the target directories exists and are writable
+     */
     public function checkUploadDirectories()
     {
         //at the end of the image manipulation, we need to store the file on disk
@@ -118,6 +139,13 @@ class WebshopAppImages
         }
     }
 
+    /**
+     * Converts the imagefile to a Php-GD image object
+     * If the upload is not a square images, it is cropped to a square image from the center of the image
+     * If the size is large that our large product image it is rescaled after possible cropping
+     * 
+     * @return GD Image, square and not bigger that the large image size we defined in this class
+     */
     public function createCroppedAndResizedImage() {
         //load the uploaded file to a Php GD image:
         $image = imagecreatefromjpeg($this->upload['tmp_name']);
@@ -170,6 +198,11 @@ class WebshopAppImages
         return $image;
     }
 
+    /**
+     * Converts the Large GD image to a thumbnail
+     * 
+     * @return GD Thumbnailimage
+     */
     public function createThumbnailFromLargeImage($large_image)
     {
         $thumbnail_image = imagecreatetruecolor($this->product_image_size_small, $this->product_image_size_small);
@@ -188,6 +221,9 @@ class WebshopAppImages
         return $thumbnail_image;
     }
 
+    /**
+     * Stores large or small image in the correct directory 
+     */
     public function saveImage($image, Array $product, $large_or_small)
     {
         $target_dir = ($large_or_small == 'small') ? $this->target_dirs['small'] : $this->target_dirs['large'];
@@ -205,6 +241,9 @@ class WebshopAppImages
         return true;
     }
 
+    /**
+     * Delete an image from disk if a product is removed by an admin
+     */
     public function deleteImage(Array $product, $large_or_small)
     {
         $target_dir = ($large_or_small == 'small') ? $this->target_dirs['small'] : $this->target_dirs['large'];
