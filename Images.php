@@ -217,10 +217,6 @@ class WebshopAppImages
         return unlink($target_file);
 
     }
-<<<<<<< HEAD
-}
-=======
 
     
 }
->>>>>>> 9b98bd08f8fb8599f627b865176936b7ea036e38
